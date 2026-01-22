@@ -5,9 +5,17 @@
   --foreground: #262626;
   --orange: #f6b83d;
   --light-orange-bg: #fff4df;
+  --light-orange-hover: #fbe7c1;
   --light-text: #fff;
   --grey-text: rgba(38, 38, 38, 0.6);
   --font-family: "Manrope", sans-serif;
+
+  /* header */
+
+}
+
+.page-spesial {
+  color: var(--background);
 }
 
 @theme inline {
