@@ -19,7 +19,10 @@ export default function Header() {
             petl
             <span>
               <svg width={19} height={17}>
-                <use href="/img/icons.svg#icon-heart" fill="#fff"></use>
+                <use
+                  href="/img/icons.svg#icon-heart"
+                  fill={isHome ? "#fff" : "var(--orange)"}
+                ></use>
               </svg>
             </span>
             ve
@@ -27,19 +30,31 @@ export default function Header() {
           <nav className="flex gap-2.5">
             <Link
               href="/news"
-              className="px-5 py-3.75 border border-(--light-text) rounded-[30px] font-medium text-base text-(--light-text) leading-[125%] tracking-[-0.03em] hover:bg-(--light-orange-bg) hover:text-(--orange) transition-all duration-300 ease-in-out"
+              className={`px-5 py-3.75  
+              border ${isHome ? "border-(--light-text)" : "border-(--light-grey)"} rounded-[30px] font-medium 
+              text-base text-${isHome ? "(--light-text)" : "(--foreground)"} leading-[125%] 
+              tracking-[-0.03em] hover:bg-${isHome ? "(--light-orange-bg)" : "(--background)"} 
+              hover:text-(--orange) transition-all duration-300 ease-in-out`}
             >
               News
             </Link>
             <Link
               href="/find"
-              className="px-5 py-3.75 border border-(--light-text) rounded-[30px] font-medium text-base text-(--light-text) leading-[125%] tracking-[-0.03em] hover:bg-(--light-orange-bg) hover:text-(--orange) transition-all duration-300 ease-in-out"
+              className={`px-5 py-3.75 border 
+              ${isHome ? "border-(--light-text)" : "border-(--light-grey)"} rounded-[30px] font-medium 
+              text-base text-${isHome ? "(--light-text)" : "(--foreground)"} leading-[125%] 
+              tracking-[-0.03em] hover:bg-${isHome ? "(--light-orange-bg)" : "(--background)"} 
+              hover:text-(--orange) transition-all duration-300 ease-in-out`}
             >
               Find pet
             </Link>
             <Link
               href="/friends"
-              className="px-5 py-3.75 border border-(--light-text) rounded-[30px] font-medium text-base text-(--light-text) leading-[125%] tracking-[-0.03em] hover:bg-(--light-orange-bg) hover:text-(--orange) transition-all duration-300 ease-in-out"
+              className={`px-5 py-3.75 border 
+              ${isHome ? "border-(--light-text)" : "border-(--light-grey)"} rounded-[30px] font-medium 
+              text-base text-${isHome ? "(--light-text)" : "(--foreground)"} leading-[125%] 
+              tracking-[-0.03em] hover:bg-${isHome ? "(--light-orange-bg)" : "(--background)"} 
+              hover:text-(--orange) transition-all duration-300 ease-in-out`}
             >
               Our friends
             </Link>
