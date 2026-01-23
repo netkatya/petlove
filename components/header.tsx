@@ -9,12 +9,14 @@ export default function Header() {
 
   return (
     <header
-      className={`bg-transparent py-8 w-full absolute top-0 left-0 px-${isHome ? "20" : "10"}`}
+      className={`bg-transparent py-8 w-full absolute top-0 left-0 ${
+        isHome ? "px-20" : "px-10"
+      }`}
     >
       <div className="container">
         <div className="flex justify-between items-center w-full">
           <p
-            className={`flex items-baseline-last font-bold text-[28px] leading-none tracking-[-0.04em] text-${isHome ? "(--light-text)" : "(--foreground)"}`}
+            className={`flex items-baseline-last font-bold text-[20px] md:text-[28px] leading-none tracking-[-0.04em] text-${isHome ? "(--light-text)" : "(--foreground)"}`}
           >
             petl
             <span>

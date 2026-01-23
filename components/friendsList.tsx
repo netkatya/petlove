@@ -1,3 +1,4 @@
+import Loading from "@/app/loading";
 import { fetchFriendsClient } from "@/lib/api/clientApi";
 import { Friend } from "@/types/friends";
 import Image from "next/image";
@@ -53,7 +54,7 @@ export default function FriendsList() {
       <h1 className="font-bold text-[54px] leading-none tracking-[-0.03em] mb-15">
         Our friends
       </h1>
-      {loading && <p>Loading friends...</p>}
+      {loading && <Loading />}
       {!loading && error && <p className="text-red-500">{error}</p>}
       <ul className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-x-5 xl:gap-y-7">
         {friendsData.map((item) => {
