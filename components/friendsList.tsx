@@ -50,12 +50,9 @@ export default function FriendsList() {
   }
 
   return (
-    <div className="container">
-      <h1 className="font-bold text-[54px] leading-none tracking-[-0.03em] mb-15">
-        Our friends
-      </h1>
+    <>
       {loading && <Loading />}
-      {!loading && error && <p className="text-red-500">{error}</p>}
+      {!loading && error && <p className="text-(--orange)">{error}</p>}
       <ul className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-x-5 xl:gap-y-7">
         {friendsData.map((item) => {
           const slug = item._id;
@@ -124,6 +121,6 @@ export default function FriendsList() {
           );
         })}
       </ul>
-    </div>
+    </>
   );
 }

@@ -15,7 +15,8 @@ export default function Header() {
     >
       <div className="container">
         <div className="flex justify-between items-center w-full">
-          <p
+          <Link
+            href="/"
             className={`flex items-baseline-last font-bold text-[20px] md:text-[28px] leading-none tracking-[-0.04em] text-${isHome ? "(--light-text)" : "(--foreground)"}`}
           >
             petl
@@ -28,7 +29,7 @@ export default function Header() {
               </svg>
             </span>
             ve
-          </p>
+          </Link>
           <nav className="flex gap-2.5">
             <Link
               href="/news"
