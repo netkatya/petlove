@@ -42,7 +42,7 @@ export default function Home() {
           <img
             src="/img/main/main-tab@1x.webp"
             alt="Woman with a dog"
-            className="w-full h-auto object-contain"
+            className="object-contain w-full h-auto"
           />
         </picture>
       </div>

@@ -7,9 +7,17 @@ import { formatDate } from "@/utils/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Pagination from "./Pagination";
 
-export default function NewsList() {
+type Props = {
+  keyword: string;
+  page: number;
+  onPageChange: (page: number) => void;
+};
+
+export default function NewsList({ keyword, page, onPageChange }: Props) {
   const [newsData, setNewsData] = useState<NewsItem[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,14 +27,12 @@ export default function NewsList() {
         setLoading(true);
         setError(null);
 
-        const response = await fetchNewsClient();
+        const response = await fetchNewsClient(keyword, page, 6);
+
         setNewsData(response.results);
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("Failed to fetch news");
-        }
+        setTotalPages(response.totalPages);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch news");
         setNewsData([]);
       } finally {
         setLoading(false);
@@ -34,12 +40,17 @@ export default function NewsList() {
     };
 
     fetchData();
-  }, []);
+  }, [keyword, page]);
 
   return (
     <>
       {loading && <Loading />}
       {!loading && error && <p className="text-(--orange)">{error}</p>}
+      {!loading && !error && keyword && newsData.length === 0 && (
+        <p className="text-center text-(--grey-text) mt-10">
+          Nothing was found for &quot;{keyword}&quot;
+        </p>
+      )}
 
       <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-x-6 md:gap-y-8 xl:grid-cols-3 xl:gap-x-8.75 xl:gap-y-10">
         {newsData.map((item) => (
@@ -49,7 +60,7 @@ export default function NewsList() {
               alt="News photo"
               width={335}
               height={190}
-              className="rounded-[15px] w-full mb-5"
+              className="rounded-[15px] w-full h-47.5 md:h-56.5 mb-5"
             ></Image>
             <h3 className="font-bold text-base leading-tight tracking-[-0.03em] mb-3">
               {item.title}
@@ -72,6 +83,29 @@ export default function NewsList() {
           </li>
         ))}
       </ul>
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={onPageChange}
+      />
+      {/* {totalPages > 1 && (
+        <div className="flex justify-center gap-3 mt-10">
+          <button disabled={page === 1} onClick={() => onPageChange(page - 1)}>
+            ←
+          </button>
+
+          <span>
+            {page} / {totalPages}
+          </span>
+
+          <button
+            disabled={page === totalPages}
+            onClick={() => onPageChange(page + 1)}
+          >
+            →
+          </button>
+        </div>
+      )} */}
     </>
   );
 }
