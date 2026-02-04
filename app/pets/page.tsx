@@ -1,13 +1,19 @@
+"use client";
+
 import PageTitle from "@/components/PageTitle";
-import Pagination from "@/components/Pagination";
 import PetsList from "@/components/PetsList";
+import { useState } from "react";
+import PetsFilters from "@/components/PetsFilters";
+import { PetsFilters as PetsFiltersType } from "@/types/pets";
 
 export default function Pets() {
+  const [filters, setFilters] = useState<PetsFiltersType>({});
   return (
     <main className="pt-44.5 pb-20 min-h-screen">
       <div className="container">
         <PageTitle>Find your favorite pet</PageTitle>
-        <PetsList />
+        <PetsFilters onChange={setFilters} onReset={() => setFilters({})} />
+        <PetsList filters={filters} />
       </div>
     </main>
   );

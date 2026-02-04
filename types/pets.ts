@@ -1,6 +1,6 @@
-type Category = "sell" | "free" | "lost" | "found";
+export type Category = "sell" | "free" | "lost" | "found";
 
-type Species =
+export type Species =
   | "dog"
   | "cat"
   | "monkey"
@@ -16,7 +16,15 @@ type Species =
   | "spider"
   | "scorpion";
 
-type Sex = "unknown" | "female" | "male" | "multiple";
+export type Sex = "unknown" | "female" | "male" | "multiple";
+
+export type City = {
+  _id: string;
+  useCounty: string;
+  stateEn: string;
+  cityEn: string;
+  countyEn: string;
+};
 
 export type PetsQueryParams = {
   keyword?: string;
@@ -57,4 +65,15 @@ export type FetchPetsResponse = {
   perPage: number;
   totalPages: number;
   results: Pet[];
+};
+
+export type PetsFilters = {
+  keyword?: string;
+  category?: Category;
+  sex?: Sex;
+  species?: Species;
+  locationId?: string;
+
+  byPopularity?: boolean;
+  byPrice?: boolean;
 };

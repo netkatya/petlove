@@ -1,12 +1,17 @@
 "use client";
 
 import { fetchPetsClient } from "@/lib/api/clientApi";
-import { Pet } from "@/types/pets";
+import { Pet, PetsFilters } from "@/types/pets";
 import { useEffect, useState } from "react";
 import Pagination from "./Pagination";
 import Image from "next/image";
+import Loading from "@/app/loading";
 
-export default function PetsList() {
+type Props = {
+  filters: PetsFilters;
+};
+
+export default function PetsList({ filters }: Props) {
   const [petsData, setPetsData] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,12 +24,16 @@ export default function PetsList() {
   };
 
   useEffect(() => {
+    setPage(1);
+  }, [filters]);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const response = await fetchPetsClient(undefined, page);
+        const response = await fetchPetsClient(filters, page);
 
         setPetsData(response.results);
         setTotalPages(response.totalPages);
@@ -41,16 +50,21 @@ export default function PetsList() {
     };
 
     fetchData();
-  }, [page]);
+  }, [filters, page]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <Loading />;
+
+  if (error) return <p>{error}</p>;
+
+  if (!loading && petsData.length === 0) {
+    return <p>No pets found</p>;
+  }
 
   return (
     <>
-      <ul>
+      <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 xl:gap-x-8 xl:gap-y-10">
         {petsData.map((pet) => (
-          <li key={pet._id} className="p-6">
+          <li key={pet._id} className="p-6 bg-(--light-text) rounded-2xl">
             <div className="w-full h-44.5 rounded-2xl overflow-hidden mb-6">
               <Image
                 src={pet.imgURL}
@@ -58,8 +72,9 @@ export default function PetsList() {
                 width={287}
                 height={178}
                 className=" object-cover w-full h-full"
-              ></Image>
+              />
             </div>
+
             <div className="flex justify-between mb-2">
               <h3 className="font-bold text-base leading-[125%] text-(--card-text)">
                 {pet.title}
@@ -73,6 +88,7 @@ export default function PetsList() {
                 </p>
               </div>
             </div>
+
             <ul className="flex gap-3.5 justify-between mb-4">
               <li>
                 <p className="font-medium text-[10px] leading-[140%] tracking-[-0.02em] text-(--grey-text)">
@@ -82,6 +98,7 @@ export default function PetsList() {
                   {pet.name}
                 </p>
               </li>
+
               <li>
                 <p className="font-medium text-[10px] leading-[140%] tracking-[-0.02em] text-(--grey-text)">
                   Birthday
@@ -90,6 +107,7 @@ export default function PetsList() {
                   {new Date(pet.birthday).toLocaleDateString("uk-UA")}
                 </p>
               </li>
+
               <li>
                 <p className="font-medium text-[10px] leading-[140%] tracking-[-0.02em] text-(--grey-text)">
                   Sex
@@ -98,6 +116,7 @@ export default function PetsList() {
                   {pet.sex}
                 </p>
               </li>
+
               <li>
                 <p className="font-medium text-[10px] leading-[140%] tracking-[-0.02em] text-(--grey-text)">
                   Species
@@ -106,6 +125,7 @@ export default function PetsList() {
                   {pet.species}
                 </p>
               </li>
+
               <li>
                 <p className="font-medium text-[10px] leading-[140%] tracking-[-0.02em] text-(--grey-text)">
                   Category
@@ -115,16 +135,20 @@ export default function PetsList() {
                 </p>
               </li>
             </ul>
+
             <p className="font-medium text-sm leading-[129%] tracking-[-0.02em] text-(--card-text) mb-4">
               {pet.comment}
             </p>
+
             <p className="font-bold text-base leading-[125%] text-(--card-text) mb-3">
               {pet.price ? `$${pet.price}` : "Free"}
             </p>
-            <div className="flex gap-2.5 justify-between">
+
+            <div className="flex gap-2.5 justify-between pt-auto">
               <button className="bg-(--orange) rounded-[30px] flex justify-center items-center w-57.75 h-11.5 font-medium text-base leading-[125%] tracking-[-0.03em] text-(--light-text)">
                 Learn more
               </button>
+
               <button
                 className="rounded-full bg-(--light-orange-bg) min-w-11.5 h-11.5 flex justify-center items-center"
                 aria-label="Add to favorites"

@@ -2,7 +2,16 @@ import { isAxiosError } from "axios";
 import { nextServer } from "./api";
 import { FetchFriendsResponse } from "@/types/friends";
 import { FetchNewsParams, FetchNewsResponse } from "@/types/news";
-import { FetchPetsResponse, PetsQueryParams } from "@/types/pets";
+import {
+  Category,
+  City,
+  FetchPetsResponse,
+  PetsFilters,
+  PetsQueryParams,
+  Sex,
+  Species,
+} from "@/types/pets";
+import { api } from "@/app/api/api";
 
 //friends
 export async function fetchFriendsClient(): Promise<FetchFriendsResponse> {
@@ -53,7 +62,7 @@ export async function fetchNewsClient(
 
 //pets
 export async function fetchPetsClient(
-  keyword?: string,
+  filters: PetsFilters,
   page = 1,
   perPage = 6,
 ): Promise<FetchPetsResponse> {
@@ -61,7 +70,7 @@ export async function fetchPetsClient(
     const params: PetsQueryParams = {
       page,
       limit: perPage,
-      ...(keyword ? { keyword: keyword.trim() } : {}),
+      ...filters,
     };
 
     const { data } = await nextServer.get<FetchPetsResponse>("/notices", {
@@ -75,4 +84,36 @@ export async function fetchPetsClient(
     }
     throw new Error("Fetching pets failed");
   }
+}
+
+//category
+export async function getCategories(): Promise<Category[]> {
+  const { data } = await nextServer.get<Category[]>("/notices/categories");
+  return data;
+}
+
+// sex
+export async function getSex(): Promise<Sex[]> {
+  const { data } = await nextServer.get<Sex[]>("/notices/sex");
+  return data;
+}
+
+// species
+export async function getSpecies(): Promise<Species[]> {
+  const { data } = await nextServer.get<Species[]>("/notices/species");
+  return data;
+}
+
+// locations
+export async function getAllLocations(): Promise<City[]> {
+  const { data } = await nextServer.get<City[]>("/cities/locations");
+  return data;
+}
+
+// location search
+export async function searchCities(keyword: string): Promise<City[]> {
+  const { data } = await nextServer.get<City[]>("/cities", {
+    params: { keyword },
+  });
+  return data;
 }

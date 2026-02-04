@@ -9,15 +9,32 @@ export async function GET(request: NextRequest) {
 
     const params: PetsQueryParams = {
       keyword: searchParams.get("keyword") || undefined,
+
       page: Number(searchParams.get("page") ?? 1),
       limit: Number(searchParams.get("perPage") ?? 6),
+
       category:
         (searchParams.get("category") as PetsQueryParams["category"]) ||
         undefined,
+
       sex: (searchParams.get("sex") as PetsQueryParams["sex"]) || undefined,
+
       species:
         (searchParams.get("species") as PetsQueryParams["species"]) ||
         undefined,
+
+      locationId: searchParams.get("locationId") || undefined,
+
+      // ОСЬ ГОЛОВНЕ ДЛЯ СОРТУВАННЯ
+      byPopularity:
+        searchParams.get("byPopularity") !== null
+          ? searchParams.get("byPopularity") === "true"
+          : undefined,
+
+      byPrice:
+        searchParams.get("byPrice") !== null
+          ? searchParams.get("byPrice") === "true"
+          : undefined,
     };
 
     const res = await api.get<FetchPetsResponse>("/notices", { params });
