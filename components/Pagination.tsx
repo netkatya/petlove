@@ -32,14 +32,14 @@ export default function Pagination({
       <button
         disabled={currentPage === 1}
         onClick={() => onPageChange(1)}
-        className="w-10 h-10 border rounded-full disabled:opacity-50 font-bold text-[14px] md:text-[18px] leading-[1.22]"
+        className="w-10 h-10 border rounded-full disabled:opacity-50 font-bold text-[14px] md:text-[18px] leading-[1.22] cursor-pointer"
       >
         &lt;&lt;
       </button>
       <button
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
-        className="w-10 h-10 border rounded-full disabled:opacity-50 font-bold text-[14px] md:text-[18px] leading-[1.22]"
+        className="w-10 h-10 border rounded-full disabled:opacity-50 font-bold text-[14px] md:text-[18px] leading-[1.22] cursor-pointer"
       >
         &lt;
       </button>
@@ -49,7 +49,7 @@ export default function Pagination({
           <button
             key={idx}
             onClick={() => onPageChange(p)}
-            className={`w-10 h-10 font-bold text-[14px] md:text-[18px] leading-[1.22] border border-(--light-grey) rounded-full ${
+            className={`w-10 h-10 font-bold text-[14px] md:text-[18px] leading-[1.22] border border-(--light-grey) rounded-full cursor-pointer ${
               p === currentPage ? "bg-(--orange) text-white" : ""
             }`}
           >
@@ -58,7 +58,7 @@ export default function Pagination({
         ) : (
           <span
             key={idx}
-            className="w-10 h-10 border border-(--grey-text) rounded-full"
+            className="w-10 h-10 border border-(--grey-text) rounded-full flex justify-center items-center cursor-pointer"
           >
             ...
           </span>
@@ -68,14 +68,14 @@ export default function Pagination({
       <button
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
-        className="w-10 h-10 border border-(--grey-text) rounded-full disabled:opacity-50 font-bold text-[14px] md:text-[18px] leading-[1.22]"
+        className="w-10 h-10 border border-(--grey-text) rounded-full disabled:opacity-50 font-bold text-[14px] md:text-[18px] leading-[1.22] cursor-pointer"
       >
         &gt;
       </button>
       <button
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(totalPages)}
-        className="w-10 h-10 border border-(--grey-text) rounded-full disabled:opacity-50 font-bold text-[14px] md:text-[18px] leading-[1.22]"
+        className="w-10 h-10 border border-(--grey-text) rounded-full disabled:opacity-50 font-bold text-[14px] md:text-[18px] leading-[1.22] cursor-pointer"
       >
         &gt;&gt;
       </button>

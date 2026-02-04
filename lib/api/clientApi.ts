@@ -2,6 +2,7 @@ import { isAxiosError } from "axios";
 import { nextServer } from "./api";
 import { FetchFriendsResponse } from "@/types/friends";
 import { FetchNewsParams, FetchNewsResponse } from "@/types/news";
+import { FetchPetsResponse, PetsQueryParams } from "@/types/pets";
 
 //friends
 export async function fetchFriendsClient(): Promise<FetchFriendsResponse> {
@@ -47,5 +48,31 @@ export async function fetchNewsClient(
       throw new Error(error.response?.data?.message || "Fetching news failed");
     }
     throw new Error("Fetching news failed");
+  }
+}
+
+//pets
+export async function fetchPetsClient(
+  keyword?: string,
+  page = 1,
+  perPage = 6,
+): Promise<FetchPetsResponse> {
+  try {
+    const params: PetsQueryParams = {
+      page,
+      limit: perPage,
+      ...(keyword ? { keyword: keyword.trim() } : {}),
+    };
+
+    const { data } = await nextServer.get<FetchPetsResponse>("/notices", {
+      params,
+    });
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || "Fetching pets failed");
+    }
+    throw new Error("Fetching pets failed");
   }
 }

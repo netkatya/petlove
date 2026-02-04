@@ -8,6 +8,8 @@
   --light-orange-hover: #fbe7c1;
   --light-text: #fff;
   --grey-text: rgba(38, 38, 38, 0.6);
+  --card-text: #2b2b2a;
+  --gold: #ffc531;
   --light-grey: rgba(38, 38, 38, 0.15);
   --font-family: "Manrope", sans-serif;
 
@@ -51,6 +53,10 @@ body {
   width: 100%;
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+.button {
+  cursor: pointer;
 }
 
 @media (min-width: 640px) {

@@ -42,7 +42,7 @@ export default function Header() {
               News
             </Link>
             <Link
-              href="/find"
+              href="/pets"
               className={`px-5 py-3.75 border 
               ${isHome ? "border-(--light-text)" : "border-(--light-grey)"} rounded-[30px] font-medium 
               text-base text-${isHome ? "(--light-text)" : "(--foreground)"} leading-[125%] 
