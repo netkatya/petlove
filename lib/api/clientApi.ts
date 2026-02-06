@@ -3,6 +3,8 @@ import { nextServer } from "./api";
 import { FetchFriendsResponse } from "@/types/friends";
 import { FetchNewsParams, FetchNewsResponse } from "@/types/news";
 import {
+  AddPetRequest,
+  AddPetResponse,
   Category,
   City,
   FetchPetsResponse,
@@ -11,7 +13,76 @@ import {
   Sex,
   Species,
 } from "@/types/pets";
-import { api } from "@/app/api/api";
+import {
+  AuthResponse,
+  CurrentUserResponse,
+  EditUserRequest,
+  EditUserResponse,
+  SignInRequest,
+  SignUpRequest,
+} from "@/types/auth";
+
+//auth
+export async function signUpUser(data: SignUpRequest) {
+  const res = await nextServer.post<AuthResponse>("/users/signup", data);
+  return res.data;
+}
+
+export async function signInUser(data: SignInRequest) {
+  const res = await nextServer.post<AuthResponse>("/users/signin", data);
+  return res.data;
+}
+
+export async function signOutUser(token: string) {
+  const res = await nextServer.post(
+    "/users/signout",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return res.data;
+}
+
+export async function getCurrentUser(token: string) {
+  const res = await nextServer.get<CurrentUserResponse>("/users/current", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.data;
+}
+
+export async function getCurrentUserFull() {
+  const { data } = await nextServer.get("/users/current/full");
+  return data;
+}
+
+export async function editUser(data: EditUserRequest) {
+  const res = await nextServer.patch<EditUserResponse>(
+    "/users/current/edit",
+    data,
+  );
+
+  return res.data;
+}
+
+export async function addPet(data: AddPetRequest) {
+  const res = await nextServer.post<AddPetResponse>(
+    "/users/current/pets/add",
+    data,
+  );
+
+  return res.data;
+}
+
+export async function removePet(id: string) {
+  return nextServer.delete(`/users/current/pets/remove/${id}`);
+}
 
 //friends
 export async function fetchFriendsClient(): Promise<FetchFriendsResponse> {

@@ -77,3 +77,24 @@ export type PetsFilters = {
   byPopularity?: boolean;
   byPrice?: boolean;
 };
+
+export type AddPetRequest = {
+  name: string;
+  title: string;
+  imgURL: string;
+  species: Species;
+  birthday: string;
+  sex: Sex;
+};
+
+export type AddPetResponse = {
+  _id: string;
+  name: string;
+  title: string;
+  imgURL: string;
+  species: Species;
+  birthday: string;
+  sex: Sex;
+  createdAt: string;
+  updatedAt: string;
+};
