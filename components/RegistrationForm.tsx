@@ -67,7 +67,7 @@ export default function RegistrationForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-2.5 w-full"
+      className="flex flex-col gap-2.5 md:gap-4 w-full"
     >
       <div>
         <input
@@ -120,7 +120,7 @@ export default function RegistrationForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="mt-3.5 mb-3 bg-(--orange) text-(--light-text) py-3 rounded-[30px] disabled:opacity-50 uppercase"
+        className="mt-3.5 md:mt-4 mb-3 md:mb-4 bg-(--orange) text-(--light-text) py-3 rounded-[30px] disabled:opacity-50 uppercase"
       >
         Registration
       </button>

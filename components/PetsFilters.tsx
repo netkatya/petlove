@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Select from "react-select";
+import Select, {
+  type GroupBase,
+  type IndicatorsContainerProps,
+  type FormatOptionLabelMeta,
+} from "react-select";
 
 import {
   getCategories,
@@ -11,7 +15,10 @@ import {
 } from "@/lib/api/clientApi";
 
 import type { Category, Sex, Species, City, PetsFilters } from "@/types/pets";
+
 import SearchInput from "./SearchInput";
+import BaseSelect from "./BaseSelect";
+import SelectIndicators from "./SelectIndicators";
 
 type Props = {
   onChange: (filters: PetsFilters) => void;
@@ -44,7 +51,6 @@ export default function PetsFilters({ onChange, onReset }: Props) {
     null,
   );
 
-  // Load filter options
   useEffect(() => {
     getCategories().then(setCategories);
     getSex().then(setSexList);
@@ -112,87 +118,147 @@ export default function PetsFilters({ onChange, onReset }: Props) {
     });
   }, [keyword, category, sex, species, selectedLocation, sort, onChange]);
 
+  const toOptions = (list: string[]) => [
+    { value: "", label: "Show all" },
+    ...list.map((item) => ({
+      value: item,
+      label: item.charAt(0).toUpperCase() + item.slice(1),
+    })),
+  ];
+
   return (
-    <div className="bg-(--light-orange-bg) p-5 rounded-[30px] flex flex-col gap-3 my-10">
+    <div className="xl:-mx-8 bg-(--light-orange-bg) p-5 rounded-[30px] flex flex-col md:flex-row md:flex-wrap gap-3 md:gap-4 my-10">
       <SearchInput
         value={inputValue}
         onChange={setInputValue}
         onSubmit={handleSearch}
         onClear={handleClear}
       />
-      <div className="grid grid-cols-2 gap-2">
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value as Category)}
-          className="rounded-[30px] bg-(--light-text) p-3 font-medium text-sm leading-[129%] tracking-[-0.03em] text-(--grey-text)"
-        >
-          <option value="">Category</option>
-          {categories.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
 
-        <select
-          value={sex}
-          onChange={(e) => setSex(e.target.value as Sex)}
-          className="rounded-[30px] bg-(--light-text) p-3 font-medium text-sm leading-[129%] tracking-[-0.03em] text-(--grey-text)"
-        >
-          <option value="">By gender</option>
-          {sexList.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
+      <div className="grid grid-cols-2 gap-2 md:gap-4 w-full md:w-auto">
+        <BaseSelect
+          placeholder="Category"
+          className="text-sm md:text-base font-medium tracking-[-0.03em] w-full md:w-42.5 xl:w-47.5"
+          value={
+            category
+              ? {
+                  value: category,
+                  label: category.charAt(0).toUpperCase() + category.slice(1),
+                }
+              : null
+          }
+          onChange={(option: SelectOption | null) => {
+            if (!option || option.value === "") {
+              handleClear();
+            } else {
+              setCategory(option.value as Category);
+            }
+          }}
+          options={toOptions(categories)}
+        />
+
+        <BaseSelect
+          placeholder="By gender"
+          className="text-sm md:text-base font-medium tracking-[-0.03em] w-full md:w-42.5 xl:w-47.5"
+          value={
+            sex
+              ? {
+                  value: sex,
+                  label: sex.charAt(0).toUpperCase() + sex.slice(1),
+                }
+              : null
+          }
+          onChange={(option: SelectOption | null) =>
+            setSex(option ? (option.value as Sex) : "")
+          }
+          options={toOptions(sexList)}
+        />
       </div>
 
-      <select
-        value={species}
-        onChange={(e) => setSpecies(e.target.value as Species)}
-        className="rounded-[30px] bg-(--light-text) p-3 font-medium text-sm leading-[129%] tracking-[-0.03em] text-(--grey-text)"
-      >
-        <option value="">By type</option>
-        {speciesList.map((s) => (
-          <option key={s} value={s}>
-            {s}
-          </option>
-        ))}
-      </select>
+      <BaseSelect
+        placeholder="By type"
+        className="text-sm md:text-base font-medium tracking-[-0.03em] w-full md:w-42.5 xl:w-47.5"
+        value={
+          species
+            ? {
+                value: species,
+                label: species.charAt(0).toUpperCase() + species.slice(1),
+              }
+            : null
+        }
+        onChange={(option: SelectOption | null) =>
+          setSpecies(option ? (option.value as Species) : "")
+        }
+        options={toOptions(speciesList)}
+      />
 
       <Select
         instanceId="city-select"
+        className="text-sm md:text-base font-medium tracking-[-0.03em] w-full md:max-w-56.75"
         options={locationOptions}
         value={selectedLocation}
-        onInputChange={(value) => {
+        onInputChange={(value: string) => {
           handleCitySearch(value);
           return value;
         }}
-        onChange={(option) =>
-          setSelectedLocation(option as SelectOption | null)
-        }
+        onChange={(option: SelectOption | null) => setSelectedLocation(option)}
         placeholder="Location"
         isClearable
-        components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+        formatOptionLabel={(
+          option: SelectOption,
+          { inputValue }: FormatOptionLabelMeta<SelectOption>,
+        ) => {
+          const label = option.label;
+
+          if (!inputValue) return <span>{label}</span>;
+
+          const index = label.toLowerCase().indexOf(inputValue.toLowerCase());
+
+          if (index === -1) return <span>{label}</span>;
+
+          return (
+            <span>
+              <span>{label.substring(0, index)}</span>
+
+              <span style={{ color: "#262626", fontWeight: 500 }}>
+                {label.substring(index, index + inputValue.length)}
+              </span>
+
+              <span>{label.substring(index + inputValue.length)}</span>
+            </span>
+          );
+        }}
+        components={{
+          IndicatorsContainer: (
+            p: IndicatorsContainerProps<SelectOption, false>,
+          ) => (
+            <SelectIndicators clearValue={p.clearValue} hasValue={p.hasValue}>
+              {p.children}
+            </SelectIndicators>
+          ),
+          DropdownIndicator: () => null,
+          IndicatorSeparator: () => null,
+          ClearIndicator: () => null,
+        }}
         styles={{
-          control: (base) => ({
+          control: (base, state) => ({
             ...base,
             borderRadius: "30px",
             backgroundColor: "var(--light-text)",
-            padding: "6px 8px",
-            fontWeight: 500,
-            fontSize: "14px",
-            lineHeight: "129%",
-            letterSpacing: "-0.03em",
-            border: "none",
+            padding: "3px 10px 3px 8px",
             boxShadow: "none",
             minHeight: "auto",
+            border: state.isFocused
+              ? "1px solid orange"
+              : "1px solid var(--light-grey)",
+            "&:hover": {
+              border: "1px solid orange",
+            },
           }),
 
-          valueContainer: (base) => ({
+          menu: (base) => ({
             ...base,
-            padding: "4px 8px",
+            borderRadius: "20px",
           }),
 
           placeholder: (base) => ({
@@ -200,9 +266,9 @@ export default function PetsFilters({ onChange, onReset }: Props) {
             color: "#9ca3af",
           }),
 
-          menu: (base) => ({
+          valueContainer: (base) => ({
             ...base,
-            borderRadius: "16px",
+            padding: "4px 8px",
           }),
 
           option: (base, state) => ({
@@ -215,6 +281,8 @@ export default function PetsFilters({ onChange, onReset }: Props) {
         }}
       />
 
+      <div className="h-px w-full bg-(--light-grey) my-3"></div>
+
       <div className="flex gap-2.5 flex-wrap">
         {[
           { key: "popular", label: "Popular" },
@@ -224,8 +292,10 @@ export default function PetsFilters({ onChange, onReset }: Props) {
         ].map((item) => (
           <div
             key={item.key}
-            className={`bg-(--light-text) p-3 rounded-[30px] font-medium text-sm leading-[129%] tracking-[-0.03em] flex items-center gap-2 ${
-              sort === item.key ? "bg-(--orange) text-white" : ""
+            className={`bg-(--light-text) p-3 md:p-3.5 border border-(--light-grey) rounded-[30px] font-medium text-sm md:text-[16px] leading-[129%] md:leading-[125%] tracking-[-0.03em] flex items-center gap-2 ${
+              sort === item.key
+                ? "bg-(--orange) text-(--light-text)"
+                : "bg-background text-(--grey-text)"
             }`}
           >
             <label className="cursor-pointer flex items-center gap-1">
