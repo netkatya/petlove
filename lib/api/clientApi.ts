@@ -14,6 +14,7 @@ import {
   Species,
 } from "@/types/pets";
 import {
+  ApiErrorResponse,
   AuthResponse,
   CurrentUserResponse,
   EditUserRequest,
@@ -24,13 +25,40 @@ import {
 
 //auth
 export async function signUpUser(data: SignUpRequest) {
-  const res = await nextServer.post<AuthResponse>("/users/signup", data);
-  return res.data;
+  try {
+    const res = await nextServer.post<AuthResponse>("/users/signup", data);
+    return res.data;
+  } catch (error) {
+    if (isAxiosError<ApiErrorResponse>(error)) {
+      const apiData = error.response?.data;
+
+      const message =
+        apiData?.message ||
+        apiData?.error ||
+        error.message ||
+        "Registration failed";
+
+      throw new Error(message);
+    }
+
+    throw new Error("Registration failed");
+  }
 }
 
 export async function signInUser(data: SignInRequest) {
-  const res = await nextServer.post<AuthResponse>("/users/signin", data);
-  return res.data;
+  try {
+    const res = await nextServer.post<AuthResponse>("/users/signin", data);
+    return res.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const message =
+        error.response?.data?.error || error.response?.data || "Login failed";
+
+      throw new Error(message);
+    }
+
+    throw new Error("Login failed");
+  }
 }
 
 export async function signOutUser(token: string) {

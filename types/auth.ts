@@ -43,3 +43,8 @@ export type EditUserResponse = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type ApiErrorResponse = {
+  message?: string;
+  error?: string;
+};

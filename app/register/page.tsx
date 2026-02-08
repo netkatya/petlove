@@ -31,17 +31,17 @@ export default function RegisterPage() {
           /img/registration/reg-mob@1x.webp 1x,
           /img/registration/reg-mob@1x.webp 2x
         "
-            src="/images/hero-mobile@1x.jpg"
+            src="/img/registration/reg-mob@1x.webp"
           />
           <img
-            src="/img/main/main-tab@1x.webp"
-            alt="Woman with a dog"
+            src="/img/registration/reg-mob@1x.webp"
+            alt="Cat"
             className="object-contain w-full h-auto"
           />
         </picture>
         <div className="flex flex-col rounded-[30px] md:rounded-[60px] bg-(--light-text) px-5 md:px-35 xl:px-21 py-6.75 md:py-7.5 xl:py-19.25">
           <PageTitle>Registration</PageTitle>
-          <p className="mt-3 md:mt-4 mb-5 md:mb-8 font-medium text-sm text-[18px] leading-[129%] md:leading-[122%] tracking-[-0.02em]">
+          <p className="mt-3 md:mt-4 mb-5 md:mb-8 font-medium text-[14px] md:text-[18px] leading-[129%] md:leading-[122%] tracking-[-0.02em]">
             Thank you for your interest in our platform.
           </p>
 

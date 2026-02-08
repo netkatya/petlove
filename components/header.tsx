@@ -11,7 +11,7 @@ export default function Header() {
   return (
     <header
       className={`bg-transparent py-8 w-full absolute top-0 left-0 ${
-        isHome ? "px-20" : "px-10"
+        isHome ? "px-20 2xl:px-32" : "px-10"
       }`}
     >
       <div className="container">

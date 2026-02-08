@@ -11,12 +11,33 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(res.data, { status: res.status });
   } catch (error) {
     if (isAxiosError(error)) {
-      return NextResponse.json(
-        {
-          error: error.response?.data || error.message,
-        },
-        { status: error.response?.status || 500 },
-      );
+      const status = error.response?.status;
+      const data = error.response?.data;
+
+      let message = "Something went wrong";
+
+      if (status === 400) {
+        message = "Invalid request data";
+      }
+
+      if (status === 401) {
+        message = "Email or password invalid";
+      }
+
+      if (status === 404) {
+        message = "Service not found";
+      }
+
+      if (status === 500) {
+        message = "Server error. Please try again later";
+      }
+
+      // Если бэкенд вернул свой текст ошибки
+      if (typeof data === "string") {
+        message = data;
+      }
+
+      return NextResponse.json({ error: message }, { status: status || 500 });
     }
 
     return NextResponse.json(

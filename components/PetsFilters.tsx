@@ -37,6 +37,7 @@ export default function PetsFilters({ onChange, onReset }: Props) {
   const [category, setCategory] = useState<Category | "">("");
   const [sex, setSex] = useState<Sex | "">("");
   const [species, setSpecies] = useState<Species | "">("");
+  const [cityInput, setCityInput] = useState("");
 
   const [sort, setSort] = useState<
     "popular" | "notPopular" | "cheap" | "expensive" | ""
@@ -137,8 +138,9 @@ export default function PetsFilters({ onChange, onReset }: Props) {
 
       <div className="grid grid-cols-2 gap-2 md:gap-4 w-full md:w-auto">
         <BaseSelect
+          instanceId="category-select"
           placeholder="Category"
-          className="text-sm md:text-base font-medium tracking-[-0.03em] w-full md:w-42.5 xl:w-47.5"
+          className="text-sm md:text-base font-medium tracking-[-0.03em] w-full md:w-42.5 xl:w-47.5 2xl:w-60"
           value={
             category
               ? {
@@ -158,8 +160,9 @@ export default function PetsFilters({ onChange, onReset }: Props) {
         />
 
         <BaseSelect
+          instanceId="sex-select"
           placeholder="By gender"
-          className="text-sm md:text-base font-medium tracking-[-0.03em] w-full md:w-42.5 xl:w-47.5"
+          className="text-sm md:text-base font-medium tracking-[-0.03em] w-full md:w-42.5 xl:w-47.5 2xl:w-60"
           value={
             sex
               ? {
@@ -176,8 +179,9 @@ export default function PetsFilters({ onChange, onReset }: Props) {
       </div>
 
       <BaseSelect
+        instanceId="species-select"
         placeholder="By type"
-        className="text-sm md:text-base font-medium tracking-[-0.03em] w-full md:w-42.5 xl:w-47.5"
+        className="text-sm md:text-base font-medium tracking-[-0.03em] w-full md:w-42.5 xl:w-47.5 2xl:w-60"
         value={
           species
             ? {
@@ -198,33 +202,38 @@ export default function PetsFilters({ onChange, onReset }: Props) {
         options={locationOptions}
         value={selectedLocation}
         onInputChange={(value: string) => {
+          setCityInput(value);
           handleCitySearch(value);
           return value;
         }}
         onChange={(option: SelectOption | null) => setSelectedLocation(option)}
         placeholder="Location"
         isClearable
-        formatOptionLabel={(
-          option: SelectOption,
-          { inputValue }: FormatOptionLabelMeta<SelectOption>,
-        ) => {
+        formatOptionLabel={(option) => {
           const label = option.label;
 
-          if (!inputValue) return <span>{label}</span>;
+          if (!cityInput) {
+            return <span style={{ color: "var(--grey-text)" }}>{label}</span>;
+          }
 
-          const index = label.toLowerCase().indexOf(inputValue.toLowerCase());
+          const lowerLabel = label.toLowerCase();
+          const lowerInput = cityInput.toLowerCase();
 
-          if (index === -1) return <span>{label}</span>;
+          const index = lowerLabel.indexOf(lowerInput);
+
+          if (index === -1) {
+            return <span style={{ color: "var(--grey-text)" }}>{label}</span>;
+          }
 
           return (
-            <span>
+            <span style={{ color: "var(--grey-text)" }}>
               <span>{label.substring(0, index)}</span>
 
-              <span style={{ color: "#262626", fontWeight: 500 }}>
-                {label.substring(index, index + inputValue.length)}
+              <span style={{ color: "var(--foreground)", fontWeight: 700 }}>
+                {label.substring(index, index + cityInput.length)}
               </span>
 
-              <span>{label.substring(index + inputValue.length)}</span>
+              <span>{label.substring(index + cityInput.length)}</span>
             </span>
           );
         }}
@@ -253,6 +262,8 @@ export default function PetsFilters({ onChange, onReset }: Props) {
               : "1px solid var(--light-grey)",
             "&:hover": {
               border: "1px solid orange",
+              transition: "all 0.3s ease-in-out",
+              cursor: "text",
             },
           }),
 
@@ -292,7 +303,7 @@ export default function PetsFilters({ onChange, onReset }: Props) {
         ].map((item) => (
           <div
             key={item.key}
-            className={`bg-(--light-text) p-3 md:p-3.5 border border-(--light-grey) rounded-[30px] font-medium text-sm md:text-[16px] leading-[129%] md:leading-[125%] tracking-[-0.03em] flex items-center gap-2 ${
+            className={`bg-(--light-text) p-3 md:p-3.5 border border-(--light-grey) rounded-[30px] font-medium text-sm md:text-[16px] leading-[129%] md:leading-[125%] tracking-[-0.03em] flex items-center gap-2 hover:border-(--orange) ${
               sort === item.key
                 ? "bg-(--orange) text-(--light-text)"
                 : "bg-background text-(--grey-text)"
@@ -314,7 +325,7 @@ export default function PetsFilters({ onChange, onReset }: Props) {
             {sort === item.key && (
               <button
                 onClick={() => setSort("")}
-                className="ml-1 text-white"
+                className="ml-1 text-white cursor-pointer"
                 aria-label="Clear sort"
               >
                 ✕

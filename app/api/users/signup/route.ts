@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { api } from "../../api";
 import { isAxiosError } from "axios";
+import { ApiErrorResponse } from "@/types/auth";
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,17 +11,19 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(res.data, { status: res.status });
   } catch (error) {
-    if (isAxiosError(error)) {
-      return NextResponse.json(
-        {
-          error: error.response?.data || error.message,
-        },
-        { status: error.response?.status || 500 },
-      );
+    if (isAxiosError<ApiErrorResponse>(error)) {
+      const status = error.response?.status || 500;
+
+      const data = error.response?.data;
+
+      const message =
+        data?.message || data?.error || error.message || "Unknown error";
+
+      return NextResponse.json({ message }, { status });
     }
 
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { message: "Internal Server Error" },
       { status: 500 },
     );
   }

@@ -28,7 +28,7 @@ export default function SearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="min-w-full md:min-w-57.5 h-10.5 md:h-12 p-3 md:p-3.75 rounded-[30px] outline-none border border-(--light-grey) bg-(--light-text) font-medium text-sm md:text-[16px] leading-[129%] md:leading-[125p%] tracking-[-0.03em] hover:border-(--orange) focus:border-(--orange)"
+        className="min-w-full md:min-w-57.5 h-10.5 md:h-12 p-3 md:p-3.75 rounded-[30px] outline-none border border-(--light-grey) bg-(--light-text) font-medium text-sm md:text-[16px] leading-[129%] md:leading-[125p%] tracking-[-0.03em] hover:border-(--orange) focus:border-(--orange) transition duration-300"
       />
       <div className="absolute top-3 md:top-4 right-3 md:right-3.75 flex gap-2">
         {value && (

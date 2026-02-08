@@ -1,19 +1,19 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
+import { IndicatorsContainerProps } from "react-select";
 
-type Props = {
-  children: React.ReactNode;
+type SelectOption = {
+  value: string;
+  label: string;
 };
 
-export default function ChevronIndicators({ children }: Props) {
-  const [isOpen, setIsOpen] = useState(false);
+type Props = IndicatorsContainerProps<SelectOption, false>;
+
+export default function ChevronIndicators({ children, selectProps }: Props) {
+  const isOpen = selectProps.menuIsOpen;
 
   return (
-    <div
-      className="flex items-center gap-2 pr-3"
-      onFocus={() => setIsOpen(true)}
-      onBlur={() => setIsOpen(false)}
-    >
+    <div className="flex items-center gap-2 pr-3">
       {children}
 
       <span className="pointer-events-none">

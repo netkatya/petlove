@@ -6,7 +6,11 @@ import { useRouter } from "next/navigation";
 import ModalApproveAction from "./ModalApproveAction";
 import { useAuthStore } from "@/lib/store/authStore";
 
-export default function LogOutBtn() {
+type Props = {
+  isHome: boolean;
+};
+
+export default function LogOutBtn({ isHome }: Props) {
   const [open, setOpen] = useState(false);
 
   const logout = useAuthStore((s) => s.logout);
@@ -22,11 +26,15 @@ export default function LogOutBtn() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="px-4 py-2 rounded-[30px] border"
+        className={`px-5 py-3.75 border rounded-[30px] text-(--light-text) font-bold text-[16px] leading-[125%] tracking-[-0.03em] uppercase transition-all duration-300 ease-in-out
+          ${
+            isHome
+              ? "border-(--light-text) hover:bg-(--light-orange-bg) hover:text-(--orange)"
+              : "border-(--orange) bg-(--orange) hover:bg-(--hover-orange)"
+          }`}
       >
         Log out
       </button>
-
       {open && (
         <ModalApproveAction
           onConfirm={handleConfirm}

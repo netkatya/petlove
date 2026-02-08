@@ -17,7 +17,7 @@ export default function Navigation({ isHome }: Props) {
     <div className="flex items-center gap-6">
       <Nav isHome={isHome} />
 
-      {isAuth ? <UserNav /> : <AuthNav />}
+      {isAuth ? <UserNav isHome={isHome} /> : <AuthNav />}
     </div>
   );
 }

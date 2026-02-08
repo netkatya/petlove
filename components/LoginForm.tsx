@@ -8,20 +8,16 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { useState } from "react";
 
 type FormValues = {
-  name: string;
   email: string;
   password: string;
-  confirmPassword: string;
 };
 
 const schema = yup.object({
-  name: yup.string().required("Name is required"),
-
   email: yup
     .string()
     .matches(
       /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
-      "Invalid email format",
+      "Enter a valid Email",
     )
     .required("Email is required"),
 
@@ -29,20 +25,14 @@ const schema = yup.object({
     .string()
     .min(7, "Password must be at least 7 characters")
     .required("Password is required"),
-
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password")], "Passwords must match")
-    .required("Confirm your password"),
 });
 
-export default function RegistrationForm() {
+export default function LoginForm() {
   const router = useRouter();
-  const signUp = useAuthStore((s) => s.signUp);
+  const signIn = useAuthStore((s) => s.signIn);
 
   const [serverError, setServerError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
@@ -55,26 +45,20 @@ export default function RegistrationForm() {
   });
 
   const password = watch("password");
-  const confirmPassword = watch("confirmPassword");
-
   const isPasswordValid = password?.length >= 7;
-  const isPasswordsMatch =
-    password && confirmPassword && password === confirmPassword;
 
   const onSubmit = async (data: FormValues) => {
     try {
       setServerError(null);
 
-      await signUp({
-        name: data.name,
+      await signIn({
         email: data.email,
         password: data.password,
       });
 
       router.push("/profile");
     } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : "Registration failed";
+      const message = error instanceof Error ? error.message : "Login failed";
 
       setServerError(message);
     }
@@ -88,21 +72,11 @@ export default function RegistrationForm() {
     >
       <div>
         <input
-          {...register("name")}
-          placeholder="Name"
-          className="border border-(--light-grey) p-3 md:p-4 rounded-[30px] w-full font-medium text-sm leading-[129%] tracking-[-0.03em]"
-        />
-        {errors.name && (
-          <p className="text-red-500 text-sm">{errors.name.message}</p>
-        )}
-      </div>
-
-      <div>
-        <input
           {...register("email")}
           placeholder="Email"
           className="border border-(--light-grey) p-3 md:p-4 rounded-[30px] w-full font-medium text-sm leading-[129%] tracking-[-0.03em]"
         />
+
         {errors.email && (
           <p className="text-red-500 text-sm">{errors.email.message}</p>
         )}
@@ -115,14 +89,14 @@ export default function RegistrationForm() {
           placeholder="Password"
           style={{ appearance: "none" }}
           className={`p-3 md:p-4 rounded-[30px] w-full font-medium text-sm leading-[129%] tracking-[-0.03em]
-      border outline-none pr-10 ${
-        errors.password
-          ? "border-red-500"
-          : touchedFields.password && isPasswordValid
-            ? "border-green-600"
-            : "border-(--light-grey)"
-      }
-    `}
+            border outline-none pr-10 ${
+              errors.password
+                ? "border-red-500"
+                : touchedFields.password && isPasswordValid
+                  ? "border-green-600"
+                  : "border-(--light-grey)"
+            }
+          `}
         />
 
         <button
@@ -150,57 +124,12 @@ export default function RegistrationForm() {
         )}
       </div>
 
-      <div className="relative">
-        <input
-          type={showConfirmPassword ? "text" : "password"}
-          {...register("confirmPassword")}
-          placeholder="Confirm password"
-          className={`p-3 md:p-4 rounded-[30px] w-full font-medium text-sm leading-[129%] tracking-[-0.03em]
-      border outline-none pr-10 ${
-        errors.confirmPassword
-          ? "border-red-500"
-          : touchedFields.confirmPassword && isPasswordsMatch
-            ? "border-green-600"
-            : "border-(--light-grey)"
-      }
-    `}
-        />
-
-        <button
-          type="button"
-          onClick={() => setShowConfirmPassword((prev) => !prev)}
-          className="absolute right-4 top-5.5 md:top-6.5 -translate-y-1/2"
-        >
-          <svg width={20} height={20}>
-            <use
-              href={`/img/icons.svg#${
-                showConfirmPassword ? "icon-eye-open" : "icon-eye-off"
-              }`}
-              stroke="var(--orange)"
-              fill="transparent"
-            />
-          </svg>
-        </button>
-
-        {errors.confirmPassword && (
-          <p className="text-red-500 text-sm">
-            {errors.confirmPassword.message}
-          </p>
-        )}
-
-        {!errors.confirmPassword &&
-          touchedFields.confirmPassword &&
-          isPasswordsMatch && (
-            <p className="text-green-600 text-sm">Passwords match</p>
-          )}
-      </div>
-
       <button
         type="submit"
         disabled={isSubmitting}
-        className="mt-3.5 md:mt-4 mb-3 md:mb-4 bg-(--orange) text-(--light-text) py-3 md:py-4 rounded-[30px] disabled:opacity-50 uppercase"
+        className="mt-10 md:mt-16 mb-3 md:mb-4 bg-(--orange) text-(--light-text) py-3 md:py-4 rounded-[30px] disabled:opacity-50 uppercase"
       >
-        Registration
+        Log In
       </button>
 
       {serverError && (
