@@ -38,7 +38,7 @@ export default function ModalApproveAction({ onConfirm, onCancel }: Props) {
         </button>
         <div className="rounded-full bg-(--light-orange-bg) w-20 h-20 flex justify-center items-center mb-5">
           <Image
-            src="/img/cat-icon.png.png"
+            src="/img/cat-icon.png"
             width={44}
             height={44}
             alt="Icon ginger cat"

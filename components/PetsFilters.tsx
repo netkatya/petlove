@@ -1,11 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Select, {
-  type GroupBase,
-  type IndicatorsContainerProps,
-  type FormatOptionLabelMeta,
-} from "react-select";
+import Select, { type IndicatorsContainerProps } from "react-select";
 
 import {
   getCategories,

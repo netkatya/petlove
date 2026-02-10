@@ -90,7 +90,7 @@ export default function RegistrationForm() {
         <input
           {...register("name")}
           placeholder="Name"
-          className="border border-(--light-grey) p-3 md:p-4 rounded-[30px] w-full font-medium text-sm leading-[129%] tracking-[-0.03em]"
+          className="border border-(--light-grey) p-3 md:p-4 rounded-[30px] w-full font-medium text-sm md:text-[16px] leading-[129%] tracking-[-0.03em]"
         />
         {errors.name && (
           <p className="text-red-500 text-sm">{errors.name.message}</p>
@@ -101,7 +101,7 @@ export default function RegistrationForm() {
         <input
           {...register("email")}
           placeholder="Email"
-          className="border border-(--light-grey) p-3 md:p-4 rounded-[30px] w-full font-medium text-sm leading-[129%] tracking-[-0.03em]"
+          className="border border-(--light-grey) p-3 md:p-4 rounded-[30px] w-full font-medium text-sm md:text-[16px] leading-[129%] tracking-[-0.03em]"
         />
         {errors.email && (
           <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -114,7 +114,7 @@ export default function RegistrationForm() {
           {...register("password")}
           placeholder="Password"
           style={{ appearance: "none" }}
-          className={`p-3 md:p-4 rounded-[30px] w-full font-medium text-sm leading-[129%] tracking-[-0.03em]
+          className={`p-3 md:p-4 rounded-[30px] w-full font-medium text-sm md:text-[16px] leading-[129%] tracking-[-0.03em]
       border outline-none pr-10 ${
         errors.password
           ? "border-red-500"
@@ -155,7 +155,7 @@ export default function RegistrationForm() {
           type={showConfirmPassword ? "text" : "password"}
           {...register("confirmPassword")}
           placeholder="Confirm password"
-          className={`p-3 md:p-4 rounded-[30px] w-full font-medium text-sm leading-[129%] tracking-[-0.03em]
+          className={`p-3 md:p-4 rounded-[30px] w-full font-medium text-sm md:text-[16px] leading-[129%] tracking-[-0.03em]
       border outline-none pr-10 ${
         errors.confirmPassword
           ? "border-red-500"

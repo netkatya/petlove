@@ -32,7 +32,6 @@ export async function POST(request: NextRequest) {
         message = "Server error. Please try again later";
       }
 
-      // Если бэкенд вернул свой текст ошибки
       if (typeof data === "string") {
         message = data;
       }

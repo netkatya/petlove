@@ -74,7 +74,7 @@ export default function LoginForm() {
         <input
           {...register("email")}
           placeholder="Email"
-          className="border border-(--light-grey) p-3 md:p-4 rounded-[30px] w-full font-medium text-sm leading-[129%] tracking-[-0.03em]"
+          className="border border-(--light-grey) p-3 md:p-4 rounded-[30px] w-full font-medium text-sm md:text-[16px] leading-[129%] tracking-[-0.03em]"
         />
 
         {errors.email && (
@@ -88,7 +88,7 @@ export default function LoginForm() {
           {...register("password")}
           placeholder="Password"
           style={{ appearance: "none" }}
-          className={`p-3 md:p-4 rounded-[30px] w-full font-medium text-sm leading-[129%] tracking-[-0.03em]
+          className={`p-3 md:p-4 rounded-[30px] w-full font-medium text-sm md:text-[16px] leading-[129%] tracking-[-0.03em]
             border outline-none pr-10 ${
               errors.password
                 ? "border-red-500"
@@ -127,7 +127,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="mt-10 md:mt-16 mb-3 md:mb-4 bg-(--orange) text-(--light-text) py-3 md:py-4 rounded-[30px] disabled:opacity-50 uppercase"
+        className="mt-10 md:mt-12 mb-3 md:mb-4 bg-(--orange) text-(--light-text) py-3 md:py-4 rounded-[30px] disabled:opacity-50 uppercase"
       >
         Log In
       </button>

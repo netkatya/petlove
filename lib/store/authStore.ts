@@ -133,6 +133,7 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({
         token: state.token,
         isAuth: state.isAuth,
+        user: state.user,
       }),
     },
   ),

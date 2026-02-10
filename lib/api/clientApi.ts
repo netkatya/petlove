@@ -7,7 +7,10 @@ import {
   AddPetResponse,
   Category,
   City,
+  FavoritesResponse,
   FetchPetsResponse,
+  GetNoticeResponse,
+  NoticeDetails,
   PetsFilters,
   PetsQueryParams,
   Sex,
@@ -215,4 +218,83 @@ export async function searchCities(keyword: string): Promise<City[]> {
     params: { keyword },
   });
   return data;
+}
+
+export async function getNoticeById(
+  id: string,
+  token: string,
+): Promise<GetNoticeResponse> {
+  try {
+    const { data } = await nextServer.get<GetNoticeResponse>(`/notices/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    throw new Error(
+      extractErrorMessage(error, "Fetching notice details failed"),
+    );
+  }
+}
+
+function extractErrorMessage(error: unknown, fallback: string): string {
+  if (isAxiosError(error)) {
+    const data = error.response?.data as ApiErrorResponse | string | undefined;
+
+    return (
+      (typeof data === "object" && data?.message) ||
+      (typeof data === "string" ? data : null) ||
+      error.message ||
+      fallback
+    );
+  }
+
+  return fallback;
+}
+
+export async function addNoticeToFavorites(
+  id: string,
+  token: string,
+): Promise<FavoritesResponse> {
+  try {
+    const { data } = await nextServer.post<FavoritesResponse>(
+      `/notices/favorites/add/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return data;
+  } catch (error) {
+    throw new Error(
+      extractErrorMessage(error, "Failed to add notice to favorites"),
+    );
+  }
+}
+
+export async function removeNoticeFromFavorites(
+  id: string,
+  token: string,
+): Promise<FavoritesResponse> {
+  try {
+    const { data } = await nextServer.delete<FavoritesResponse>(
+      `/notices/favorites/remove/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return data;
+  } catch (error) {
+    throw new Error(
+      extractErrorMessage(error, "Failed to remove notice from favorites"),
+    );
+  }
 }

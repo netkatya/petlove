@@ -98,3 +98,29 @@ export type AddPetResponse = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type FavoritesResponse = string[];
+
+export type NoticeDetails = {
+  _id: string;
+  species: Species;
+  category: Category;
+  price?: number;
+  title: string;
+  name: string;
+  birthday: string;
+  comment: string;
+  sex: Sex;
+  location: City;
+  imgURL: string;
+  createdAt: string;
+  updatedAt?: string;
+  user: {
+    _id: string;
+    email: string;
+    phone?: string;
+  };
+  popularity: number;
+};
+
+export type GetNoticeResponse = NoticeDetails;

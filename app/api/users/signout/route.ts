@@ -10,9 +10,7 @@ export async function POST(request: NextRequest) {
       "/users/signout",
       {},
       {
-        headers: {
-          Authorization: authHeader || "",
-        },
+        headers: authHeader ? { Authorization: authHeader } : {},
       },
     );
 

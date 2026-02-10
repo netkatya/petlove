@@ -25,7 +25,6 @@ export async function GET(request: NextRequest) {
 
       locationId: searchParams.get("locationId") || undefined,
 
-      // ОСЬ ГОЛОВНЕ ДЛЯ СОРТУВАННЯ
       byPopularity:
         searchParams.get("byPopularity") !== null
           ? searchParams.get("byPopularity") === "true"
