@@ -12,7 +12,7 @@ import {
 
 import type { Category, Sex, Species, City, PetsFilters } from "@/types/pets";
 
-import SearchInput from "./SearchInput";
+import SearchInput from "../SearchInput";
 import BaseSelect from "./BaseSelect";
 import SelectIndicators from "./SelectIndicators";
 

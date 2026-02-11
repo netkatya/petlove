@@ -1,9 +1,9 @@
 "use client";
 
 import PageTitle from "@/components/PageTitle";
-import PetsList from "@/components/PetsList";
+import PetsList from "@/components/Notices/PetsList";
 import { useState } from "react";
-import PetsFilters from "@/components/PetsFilters";
+import PetsFilters from "@/components/Notices/PetsFilters";
 import { PetsFilters as PetsFiltersType } from "@/types/pets";
 
 export default function Pets() {

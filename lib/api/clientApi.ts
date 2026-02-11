@@ -10,21 +10,18 @@ import {
   FavoritesResponse,
   FetchPetsResponse,
   GetNoticeResponse,
-  NoticeDetails,
   PetsFilters,
   PetsQueryParams,
   Sex,
   Species,
 } from "@/types/pets";
+import { AuthResponse, SignInRequest, SignUpRequest } from "@/types/auth";
 import {
   ApiErrorResponse,
-  AuthResponse,
   CurrentUserResponse,
   EditUserRequest,
   EditUserResponse,
-  SignInRequest,
-  SignUpRequest,
-} from "@/types/auth";
+} from "@/types/user";
 
 //auth
 export async function signUpUser(data: SignUpRequest) {
@@ -88,9 +85,14 @@ export async function getCurrentUser(token: string) {
   return res.data;
 }
 
-export async function getCurrentUserFull() {
-  const { data } = await nextServer.get("/users/current/full");
-  return data;
+export async function getCurrentUserFull(token: string) {
+  const res = await nextServer.get("/users/current/full", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.data;
 }
 
 export async function editUser(data: EditUserRequest) {

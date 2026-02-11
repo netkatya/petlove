@@ -1,10 +1,10 @@
 "use client";
 
 import { useAuthStore } from "@/lib/store/authStore";
-
+import Nav from "./Nav";
 import UserNav from "./UserNav";
 import AuthNav from "./AuthNav";
-import Nav from "./Nav";
+
 
 type Props = {
   isHome: boolean;

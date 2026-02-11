@@ -1,6 +1,6 @@
 "use client";
 
-import NewsList from "@/components/NewsList";
+import NewsList from "@/components/News/NewsList";
 import PageTitle from "@/components/PageTitle";
 import SearchInput from "@/components/SearchInput";
 import { useState } from "react";

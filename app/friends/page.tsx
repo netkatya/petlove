@@ -1,6 +1,6 @@
 "use client";
 
-import FriendsList from "@/components/FriendsList";
+import FriendsList from "@/components/Friends/FriendsList";
 import PageTitle from "@/components/PageTitle";
 
 export default function FreindsPage() {

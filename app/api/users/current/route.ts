@@ -1,30 +1,53 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { api } from "../../api";
 import { isAxiosError } from "axios";
+import { ApiErrorResponse } from "@/types/user";
 
 export async function GET(request: NextRequest) {
   try {
-    const authHeader = request.headers.get("authorization");
+    let token =
+      request.headers.get("authorization")?.replace("Bearer ", "") || "";
+
+    if (!token) {
+      const cookieStore = await cookies();
+      token = cookieStore.get("token")?.value || "";
+    }
+
+    if (!token) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
 
     const res = await api.get("/users/current", {
       headers: {
-        Authorization: authHeader || "",
+        Authorization: `Bearer ${token}`,
       },
     });
 
     return NextResponse.json(res.data, { status: res.status });
   } catch (error) {
     if (isAxiosError(error)) {
+      const data = error.response?.data as
+        | ApiErrorResponse
+        | string
+        | undefined;
+
+      let message: string | undefined;
+
+      if (typeof data === "string") {
+        message = data;
+      } else if (typeof data === "object" && data !== null) {
+        message = data.message || data.error;
+      }
+
       return NextResponse.json(
-        {
-          error: error.response?.data || error.message,
-        },
+        { message },
         { status: error.response?.status || 500 },
       );
     }
 
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { message: "Internal Server Error" },
       { status: 500 },
     );
   }

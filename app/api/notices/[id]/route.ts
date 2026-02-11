@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { api } from "../../api";
 import { isAxiosError } from "axios";
+import { cookies } from "next/headers";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -13,8 +14,13 @@ export async function GET(request: NextRequest, { params }: Props) {
   const { id } = await params;
 
   try {
-    const authHeader = request.headers.get("authorization");
-    const token = authHeader?.replace("Bearer ", "");
+    let token =
+      request.headers.get("authorization")?.replace("Bearer ", "") || "";
+
+    if (!token) {
+      const cookieStore = await cookies();
+      token = cookieStore.get("token")?.value || "";
+    }
 
     if (!token) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });

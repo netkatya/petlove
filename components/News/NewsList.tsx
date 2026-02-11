@@ -7,7 +7,7 @@ import { formatDate } from "@/utils/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Pagination from "./Pagination";
+import Pagination from "../Pagination";
 
 type Props = {
   keyword: string;

@@ -1,28 +1,52 @@
 import { NextRequest, NextResponse } from "next/server";
 import { api } from "../../../../api";
 import { isAxiosError } from "axios";
-import { ApiErrorResponse } from "@/types/auth";
+import { ApiErrorResponse } from "@/types/user";
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+type Props = { params: Promise<{ id: string }> };
+
+export async function POST(request: NextRequest, { params }: Props) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
-    const res = await api.post(`/notices/favorites/add/${id}`);
+    const authHeader = request.headers.get("authorization");
+    const token = authHeader?.replace("Bearer ", "");
+
+    if (!token) {
+      return NextResponse.json(
+        { message: "Not authenticated" },
+        { status: 401 },
+      );
+    }
+
+    const res = await api.post(`/notices/favorites/add/${id}`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return NextResponse.json(res.data, { status: res.status });
   } catch (error) {
-    if (isAxiosError<ApiErrorResponse>(error)) {
+    if (isAxiosError(error)) {
       const status = error.response?.status || 500;
 
-      const data = error.response?.data;
+      const data = error.response?.data as
+        | ApiErrorResponse
+        | string
+        | undefined;
 
-      const message =
-        data?.message || data?.error || error.message || "Unknown error";
+      let message: string | undefined;
 
-      return NextResponse.json({ message }, { status });
+      if (typeof data === "string") {
+        message = data;
+      } else if (typeof data === "object" && data !== null) {
+        message = data.message || data.error;
+      }
+
+      return NextResponse.json(
+        { message: message || "Failed to add notice to favorites" },
+        { status },
+      );
     }
 
     return NextResponse.json(

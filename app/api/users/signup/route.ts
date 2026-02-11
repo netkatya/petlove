@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { api } from "../../api";
 import { isAxiosError } from "axios";
-import { ApiErrorResponse } from "@/types/auth";
+import { ApiErrorResponse } from "@/types/user";
 
 export async function POST(request: NextRequest) {
   try {

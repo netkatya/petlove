@@ -1,5 +1,4 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
 import { IndicatorsContainerProps } from "react-select";
 
 type SelectOption = {

@@ -1,32 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { api } from "../../api";
 import { isAxiosError } from "axios";
 
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get("authorization");
+    let token =
+      request.headers.get("authorization")?.replace("Bearer ", "") || "";
 
-    const res = await api.post(
+    if (!token) {
+      const cookieStore = await cookies();
+      token = cookieStore.get("token")?.value || "";
+    }
+
+    await api.post(
       "/users/signout",
       {},
       {
-        headers: authHeader ? { Authorization: authHeader } : {},
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
     );
 
-    return NextResponse.json(res.data, { status: res.status });
+    const response = NextResponse.json({ success: true });
+
+    response.cookies.delete("token");
+
+    return response;
   } catch (error) {
     if (isAxiosError(error)) {
       return NextResponse.json(
-        {
-          error: error.response?.data || error.message,
-        },
+        { message: error.response?.data || error.message },
         { status: error.response?.status || 500 },
       );
     }
 
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { message: "Internal Server Error" },
       { status: 500 },
     );
   }

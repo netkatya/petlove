@@ -1,6 +1,6 @@
 "use client";
 
-import LogOutBtn from "./LogOutButton";
+import LogOutBtn from "../LogOutButton";
 import UserBar from "./UserBar";
 
 type Props = {

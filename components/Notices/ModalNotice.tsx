@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import { NoticeDetails } from "@/types/pets";
+import { Heart } from "lucide-react";
 
 type Props = {
   notice: NoticeDetails;
@@ -39,16 +40,19 @@ export default function ModalNotice({
       onClick={handleBackdrop}
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate-fadeIn"
     >
-      <div className="bg-(--light-text) rounded-[30px] px-7 py-10 w-[95%] max-w-83.75 relative animate-scaleIn">
+      <div className="bg-(--light-text) rounded-[30px] px-7 md:px-18 py-10 w-[95%] md:w-full max-w-83.75 md:max-w-118.5 relative animate-scaleIn">
         <button
           onClick={onClose}
-          className="absolute right-5 top-5 text-(--grey-text) hover:text-(--orange)"
+          className="absolute top-5 right-5"
+          aria-label="Close"
         >
-          ✕
+          <svg width={14} height={14}>
+            <use href="/img/icons.svg#icon-close" stroke="#262626" />
+          </svg>
         </button>
 
         <div className="flex flex-col items-center">
-          <div className="w-30 h-30 rounded-full overflow-hidden mb-5">
+          <div className="relative w-30 md:w-37.5 h-30 md:h-37.5 rounded-full overflow-hidden mb-5">
             <Image
               src={notice.imgURL}
               alt={notice.title}
@@ -57,8 +61,13 @@ export default function ModalNotice({
               className="object-cover w-full h-full"
             />
           </div>
+          <div className="absolute left-[30%] rounded-[30px] px-3.5 py-2 bg-(--light-orange-bg)">
+            <p className="font-medium text-[12px] leading-[133%] tracking-[-0.02em] text-(--orange) capitalize">
+              {notice.category}
+            </p>
+          </div>
 
-          <h3 className="font-bold text-[16px] leading-[125%] mb-2.5">
+          <h3 className="font-bold text-[16px] md:text-[18px] leading-[125%] md:leading-[133%] mb-2.5">
             {notice.title}
           </h3>
 
@@ -113,21 +122,22 @@ export default function ModalNotice({
           <p className="font-medium text-[14px] leading-[129%] tracking-[-0.02em] mb-8">
             {notice.comment}
           </p>
-          <p className="font-bold text-[16px] leading-[125%] mb-5">
+          <p className="font-bold text-[16px] md:text-[18px] leading-[125%] md:leading-[133%] mb-5">
             {notice.price ? `$${notice.price}` : "Free"}
           </p>
 
-          <div className="flex gap-2.5 w-full">
+          <div className="grid grid-cols-2 gap-2.5 w-full">
             <button
               onClick={() => onFavoriteToggle(notice)}
-              className="flex py-3 rounded-[30px] border border-(--orange) text-(--orange) hover:bg-(--light-orange-bg) transition"
+              className="flex justify-center items-center gap-2 py-3 rounded-[30px] border bg-(--orange) text-(--light-text) hover:bg-(--hover-orange) transition-all duration-300"
             >
               {isFavorite ? "Remove from" : "Add to"}
+              <Heart size={18} fill={isFavorite ? "currentColor" : "none"} />
             </button>
 
             <a
               href={`tel:${notice.user.phone}`}
-              className="flex py-3 rounded-[30px] bg-(--orange) text-(--light-text) text-center hover:bg-(--hover-orange) transition"
+              className="flex justify-center items-center py-3 rounded-[30px] bg-(--light-orange-bg) text-(--orange) text-center hover:bg-(--light-orange-hover) transition"
             >
               Contact
             </a>

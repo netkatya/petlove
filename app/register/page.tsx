@@ -1,4 +1,4 @@
-import RegistrationForm from "@/components/RegistrationForm";
+import RegistrationForm from "@/components/Auth/RegistrationForm";
 import Link from "next/link";
 import PageTitle from "@/components/PageTitle";
 

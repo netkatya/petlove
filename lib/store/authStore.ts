@@ -8,12 +8,8 @@ import {
   getCurrentUser,
 } from "@/lib/api/clientApi";
 
-import {
-  AuthResponse,
-  CurrentUserResponse,
-  SignInRequest,
-  SignUpRequest,
-} from "@/types/auth";
+import { AuthResponse, SignInRequest, SignUpRequest } from "@/types/auth";
+import { CurrentUserResponse } from "@/types/user";
 
 type AuthState = {
   user: CurrentUserResponse | null;
