@@ -22,6 +22,7 @@ import {
   EditUserRequest,
   EditUserResponse,
 } from "@/types/user";
+import { useAuthStore } from "../store/authStore";
 
 //auth
 export async function signUpUser(data: SignUpRequest) {
@@ -96,25 +97,41 @@ export async function getCurrentUserFull(token: string) {
 }
 
 export async function editUser(data: EditUserRequest) {
+  const token = useAuthStore.getState().token;
+
   const res = await nextServer.patch<EditUserResponse>(
     "/users/current/edit",
     data,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
   );
 
   return res.data;
 }
 
 export async function addPet(data: AddPetRequest) {
+  const token = useAuthStore.getState().token;
+
   const res = await nextServer.post<AddPetResponse>(
     "/users/current/pets/add",
     data,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
   );
 
   return res.data;
 }
 
 export async function removePet(id: string) {
-  return nextServer.delete(`/users/current/pets/remove/${id}`);
+  const token = useAuthStore.getState().token;
+
+  return nextServer.delete(`/users/current/pets/remove/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 //friends

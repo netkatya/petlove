@@ -26,7 +26,7 @@ export default function LogOutBtn({ isHome }: Props) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className={`px-5 py-3.75 border rounded-[30px] text-(--light-text) font-bold text-[16px] leading-[125%] tracking-[-0.03em] uppercase transition-all duration-300 ease-in-out
+        className={`px-7 md:px-5 py-3 md:py-3.75 border rounded-[30px] text-(--light-text) font-bold text-[14px] md:text-[16px] leading-[129%] md:leading-[125%] tracking-[-0.03em] uppercase transition-all duration-300 ease-in-out
           ${
             isHome
               ? "border-(--light-text) hover:bg-(--light-orange-bg) hover:text-(--orange)"

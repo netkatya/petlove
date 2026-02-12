@@ -24,6 +24,7 @@ export default function UserCard({ isHome, user, onUpdated }: Props) {
       <div className="mt-6">
         <PetsBlock pets={user.pets} onChanged={onUpdated} />
       </div>
+
       <LogOutBtn isHome={isHome} />
     </section>
   );
