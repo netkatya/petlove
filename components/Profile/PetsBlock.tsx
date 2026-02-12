@@ -7,7 +7,7 @@ import UserPetsList from "./UserPetsList";
 
 type Props = {
   pets: UserPet[];
-  onChanged: () => void;
+  onChanged?: () => void;
 };
 
 export default function PetsBlock({ pets, onChanged }: Props) {

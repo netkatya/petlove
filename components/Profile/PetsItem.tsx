@@ -5,13 +5,13 @@ import { UserPet } from "@/types/user";
 
 type Props = {
   pet: UserPet;
-  onChanged: () => void;
+  onChanged?: () => void;
 };
 
 export default function PetsItem({ pet, onChanged }: Props) {
   const remove = async () => {
     await removePet(pet._id);
-    onChanged();
+    onChanged?.();
   };
 
   return (

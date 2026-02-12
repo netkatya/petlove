@@ -6,13 +6,16 @@ import {
   signUpUser,
   signOutUser,
   getCurrentUser,
+  getCurrentUserFull,
 } from "@/lib/api/clientApi";
 
 import { AuthResponse, SignInRequest, SignUpRequest } from "@/types/auth";
-import { CurrentUserResponse } from "@/types/user";
+import { CurrentUserFullResponse, CurrentUserResponse } from "@/types/user";
 
 type AuthState = {
   user: CurrentUserResponse | null;
+  userFull: CurrentUserFullResponse | null;
+
   token: string | null;
   isAuth: boolean;
   loading: boolean;
@@ -21,7 +24,10 @@ type AuthState = {
   signIn: (data: SignInRequest) => Promise<void>;
   signUp: (data: SignUpRequest) => Promise<void>;
   logout: () => Promise<void>;
-  fetchCurrentUser: () => Promise<void>;
+
+  refreshUser: () => Promise<void>;
+  updateUserLocal: (data: Partial<CurrentUserResponse>) => void;
+
   clearError: () => void;
 };
 
@@ -29,6 +35,7 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       user: null,
+      userFull: null,
       token: null,
       isAuth: false,
       loading: false,
@@ -36,100 +43,73 @@ export const useAuthStore = create<AuthState>()(
 
       clearError: () => set({ error: null }),
 
+      /* ---------------- AUTH ---------------- */
+
       signIn: async (data) => {
-        try {
-          set({ loading: true, error: null });
-
-          const res: AuthResponse = await signInUser(data);
-
-          set({
-            token: res.token,
-            isAuth: true,
-          });
-
-          await get().fetchCurrentUser();
-        } catch (err: unknown) {
-          const message = err instanceof Error ? err.message : "Login failed";
-
-          set({ error: message });
-          throw err;
-        } finally {
-          set({ loading: false });
-        }
+        const res: AuthResponse = await signInUser(data);
+        set({ token: res.token, isAuth: true });
+        await get().refreshUser();
       },
 
       signUp: async (data) => {
-        try {
-          set({ loading: true, error: null });
-
-          const res: AuthResponse = await signUpUser(data);
-
-          set({
-            token: res.token,
-            isAuth: true,
-          });
-
-          await get().fetchCurrentUser();
-        } catch (err: unknown) {
-          const message =
-            err instanceof Error ? err.message : "Registration failed";
-
-          set({ error: message });
-          throw err;
-        } finally {
-          set({ loading: false });
-        }
+        const res: AuthResponse = await signUpUser(data);
+        set({ token: res.token, isAuth: true });
+        await get().refreshUser();
       },
 
-      fetchCurrentUser: async () => {
-        const token = get().token;
+      /* ---------------- LOAD USER ---------------- */
 
+      refreshUser: async () => {
+        const token = get().token;
         if (!token) return;
 
-        try {
-          set({ loading: true });
+        set({ loading: true });
 
-          const user = await getCurrentUser(token);
+        try {
+          const [user, full] = await Promise.all([
+            getCurrentUser(token),
+            getCurrentUserFull(token),
+          ]);
 
           set({
             user,
+            userFull: full,
             isAuth: true,
-          });
-        } catch {
-          set({
-            user: null,
-            token: null,
-            isAuth: false,
           });
         } finally {
           set({ loading: false });
         }
       },
 
+      /* instant UI update (avatar/name) */
+
+      updateUserLocal: (data) =>
+        set((state) => ({
+          user: state.user ? { ...state.user, ...data } : null,
+          userFull: state.userFull ? { ...state.userFull, ...data } : null,
+        })),
+
+      /* ---------------- LOGOUT ---------------- */
+
       logout: async () => {
         const token = get().token;
+        if (token) await signOutUser(token);
 
-        try {
-          if (token) {
-            await signOutUser(token);
-          }
-        } catch (err) {
-          console.error("Logout error:", err);
-        } finally {
-          set({
-            user: null,
-            token: null,
-            isAuth: false,
-          });
-        }
+        set({
+          user: null,
+          userFull: null,
+          token: null,
+          isAuth: false,
+        });
       },
     }),
     {
       name: "auth-storage",
-      partialize: (state) => ({
-        token: state.token,
-        isAuth: state.isAuth,
-        user: state.user,
+      partialize: (s) => ({
+        token: s.token,
+        isAuth: s.isAuth,
+        user: s.user,
+        userFull: s.userFull,
       }),
     },
   ),

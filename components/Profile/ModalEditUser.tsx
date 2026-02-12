@@ -9,6 +9,8 @@ import { editUser } from "@/lib/api/clientApi";
 import { EditUserRequest } from "@/types/user";
 import Image from "next/image";
 import { uploadAvatar } from "@/lib/cloudinary/cloudinary";
+import { CloudUpload } from "lucide-react";
+import { useAuthStore } from "@/lib/store/authStore";
 
 /* ---------------- VALIDATION ---------------- */
 
@@ -41,7 +43,6 @@ const schema: yup.ObjectSchema<EditUserRequest> = yup.object({
 
 type Props = {
   onClose: () => void;
-  onUpdated: () => void;
   initialAvatar?: string | null;
   initialValues?: {
     name?: string;
@@ -54,7 +55,6 @@ type Props = {
 
 export default function ModalEditUser({
   onClose,
-  onUpdated,
   initialAvatar,
   initialValues,
 }: Props) {
@@ -68,6 +68,7 @@ export default function ModalEditUser({
     handleSubmit,
     setValue,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<EditUserRequest>({
     resolver: yupResolver(schema),
@@ -79,6 +80,7 @@ export default function ModalEditUser({
     },
   });
 
+  const updateUser = useAuthStore((s) => s.updateUserLocal);
   /* ---------- RESET WHEN USER CHANGED ---------- */
 
   useEffect(() => {
@@ -128,13 +130,21 @@ export default function ModalEditUser({
   const submit = async (data: EditUserRequest) => {
     try {
       await editUser(data);
-      onUpdated();
+
+      updateUser({
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        avatar: data.avatar,
+      });
+
       onClose();
     } catch {
       alert("Failed to update profile");
     }
   };
 
+  const phoneValue = watch("phone");
   /* ---------------- UI ---------------- */
 
   return (
@@ -143,12 +153,18 @@ export default function ModalEditUser({
       onClick={onClose}
     >
       <div
-        className="bg-(--light-text) rounded-[30px] px-7 md:px-18 py-10 w-[95%] md:w-full max-w-83.75 md:max-w-118.5 relative"
+        className="bg-(--light-text) rounded-[30px] px-5 md:px-18 py-10 w-[95%] md:w-full max-w-83.75 relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* CLOSE BTN */}
-        <button onClick={onClose} className="absolute right-5 top-5 text-xl">
-          ✕
+        <button onClick={onClose} className="absolute right-5 top-5">
+          <svg width={14} height={14}>
+            <use
+              href="/img/icons.svg#icon-close"
+              stroke="#262626"
+              className="hover:stroke-(--orange) transition-all duration-300"
+            />
+          </svg>
         </button>
 
         <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-4">
@@ -162,8 +178,9 @@ export default function ModalEditUser({
               alt="avatar"
             />
 
-            <label className="bg-(--light-orange-bg) text-(--orange) font-medium text-sm rounded-[30px] px-4 py-2 cursor-pointer">
+            <label className="bg-(--light-orange-bg) text-(--orange) font-medium text-[12px] rounded-[30px] px-4 py-2 cursor-pointer flex gap-2 items-center hover:bg-(--light-orange-hover) transition-all duration-300">
               {uploading ? "Uploading..." : "Upload photo"}
+              <CloudUpload size={18} className="text-(--orange)" />
               <input
                 type="file"
                 accept="image/*"
@@ -172,40 +189,44 @@ export default function ModalEditUser({
               />
             </label>
           </div>
-
-          <input type="hidden" {...register("avatar")} />
-
-          {/* NAME */}
-          <div>
-            <input {...register("name")} className="input" placeholder="Name" />
-            {errors.name && <p className="error">{errors.name.message}</p>}
-          </div>
-
-          {/* EMAIL */}
-          <div>
-            <input
-              {...register("email")}
-              className="input"
-              placeholder="Email"
-            />
-            {errors.email && <p className="error">{errors.email.message}</p>}
-          </div>
-
-          {/* PHONE */}
-          <div>
-            <input
-              {...register("phone")}
-              className="input"
-              placeholder="+380XXXXXXXXX"
-            />
-            {errors.phone && <p className="error">{errors.phone.message}</p>}
-          </div>
+          <ul className="flex flex-col gap-2.5 w-full">
+            {" "}
+            {/* NAME */}
+            <div>
+              <input
+                {...register("name")}
+                className="rounded-[30px] p-3 border border-(--orange) w-full font-medium text-[14px] leading-[129%] tracking-[-0.03em]"
+                placeholder="Name"
+              />
+              {errors.name && <p className="error">{errors.name.message}</p>}
+            </div>
+            {/* EMAIL */}
+            <div>
+              <input
+                {...register("email")}
+                className="rounded-[30px] p-3 border border-(--orange) w-full font-medium text-[14px] leading-[129%] tracking-[-0.03em]"
+                placeholder="Email"
+              />
+              {errors.email && <p className="error">{errors.email.message}</p>}
+            </div>
+            {/* PHONE */}
+            <div>
+              <input
+                {...register("phone")}
+                className={`rounded-[30px] p-3 border w-full font-medium text-[14px] leading-[129%] tracking-[-0.03em] ${
+                  phoneValue ? "border-(--orange)" : "border-(--light-grey)"
+                }`}
+                placeholder="+380"
+              />
+              {errors.phone && <p className="error">{errors.phone.message}</p>}
+            </div>
+          </ul>
 
           {/* BUTTONS */}
-          <div className="flex gap-3 mt-4">
+          <div className="grid grid-cols-2 gap-2 mt-2">
             <button
               disabled={isSubmitting}
-              className="bg-(--orange) text-white rounded-[30px] px-5 py-2"
+              className="border bg-(--orange) text-(--light-text) rounded-[30px] font-bold text-[14px] leading-[129%] tracking-[-0.03em] px-5 py-3 hover:bg-(--hover-orange) transition-all duration-300"
             >
               Save
             </button>
@@ -213,9 +234,9 @@ export default function ModalEditUser({
             <button
               type="button"
               onClick={onClose}
-              className="border rounded-[30px] px-5 py-2"
+              className="border border-(--orange) rounded-[30px] text-(--orange) font-bold text-[14px] leading-[129%] tracking-[-0.03em] text-center px-5 py-3 hover:bg-(--orange) hover:text-(--light-text) transition-all duration-300"
             >
-              Cancel
+              Go to profile
             </button>
           </div>
         </form>

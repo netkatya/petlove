@@ -1,253 +1,107 @@
 "use client";
 
-import {
-  fetchPetsClient,
-  getNoticeById,
-  addNoticeToFavorites,
-  removeNoticeFromFavorites,
-} from "@/lib/api/clientApi";
-
-import { NoticeDetails, Pet, PetsFilters } from "@/types/pets";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { fetchPetsClient, getNoticeById } from "@/lib/api/clientApi";
+import { Pet, PetsFilters, NoticeDetails } from "@/types/pets";
 import Pagination from "../Pagination";
-import Image from "next/image";
 import Loading from "@/app/loading";
-import ModalAttention from "./ModalAttention";
 import ModalNotice from "./ModalNotice";
+import ModalAttention from "./ModalAttention";
 import { useAuthStore } from "@/lib/store/authStore";
+import { useFavoritesStore } from "@/lib/store/favoritesStore";
+import NoticeCard from "./NoticeCard";
 
-type Props = {
-  filters: PetsFilters;
-};
+type Props = { filters: PetsFilters };
 
 export default function PetsList({ filters }: Props) {
   const { isAuth, token } = useAuthStore();
+  const { toggleFavorite, isFavorite, loadFavorites, loaded } =
+    useFavoritesStore();
 
   const [petsData, setPetsData] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
-  const [attentionOpen, setAttentionOpen] = useState(false);
 
   const [selectedNotice, setSelectedNotice] = useState<NoticeDetails | null>(
     null,
   );
   const [noticeOpen, setNoticeOpen] = useState(false);
+  const [attentionOpen, setAttentionOpen] = useState(false);
 
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const prevFilters = useRef<PetsFilters | null>(null);
 
-  const [noticeError, setNoticeError] = useState<string | null>(null);
-
-  const onPageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
+  /* ---------------- LOAD FAVORITES AFTER AUTH ---------------- */
   useEffect(() => {
-    setPage(1);
-  }, [filters]);
+    if (isAuth && !loaded) {
+      loadFavorites();
+    }
+  }, [isAuth, loaded, loadFavorites]);
 
+  /* ---------------- RESET PAGE WHEN FILTERS CHANGE ---------------- */
+  if (prevFilters.current !== filters) {
+    prevFilters.current = filters;
+    if (page !== 1) setPage(1);
+  }
+
+  /* ---------------- LOAD PETS ---------------- */
   useEffect(() => {
-    const fetchData = async () => {
+    let ignore = false;
+
+    const load = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        setError(null);
+        const res = await fetchPetsClient(filters, page);
 
-        const response = await fetchPetsClient(filters, page);
-
-        setPetsData(response.results);
-        setTotalPages(response.totalPages);
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("Failed to fetch pets");
+        if (!ignore) {
+          setPetsData(res.results);
+          setTotalPages(res.totalPages);
         }
-        setPetsData([]);
       } finally {
-        setLoading(false);
+        if (!ignore) setLoading(false);
       }
     };
 
-    fetchData();
+    load();
+
+    return () => {
+      ignore = true;
+    };
   }, [filters, page]);
 
+  /* ---------------- OPEN NOTICE ---------------- */
+  const handleLearnMore = async (id: string) => {
+    if (!isAuth || !token) {
+      setAttentionOpen(true);
+      return;
+    }
+
+    const full = await getNoticeById(id, token);
+    setSelectedNotice(full);
+    setNoticeOpen(true);
+  };
+
   if (loading) return <Loading />;
-
-  if (error) return <p>{error}</p>;
-
-  if (petsData.length === 0) {
-    return <p>No pets found</p>;
-  }
-
-  const handleLearnMore = async (pet: Pet) => {
-    if (!isAuth || !token) {
-      setAttentionOpen(true);
-      return;
-    }
-
-    try {
-      setNoticeError(null);
-
-      const authToken: string = token;
-
-      const fullInfo = await getNoticeById(pet._id, authToken);
-
-      setSelectedNotice(fullInfo);
-      setNoticeOpen(true);
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Failed to load notice details";
-
-      setNoticeError(message);
-    }
-  };
-
-  const toggleFavoriteById = async (id: string) => {
-    if (!isAuth || !token) {
-      setAttentionOpen(true);
-      return;
-    }
-
-    const authToken: string = token;
-
-    try {
-      const isFav = favorites.includes(id);
-
-      const updated = isFav
-        ? await removeNoticeFromFavorites(id, authToken)
-        : await addNoticeToFavorites(id, authToken);
-
-      setFavorites(updated);
-    } catch (error) {
-      alert(
-        error instanceof Error ? error.message : "Failed to update favorites",
-      );
-    }
-  };
 
   return (
     <>
       <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 xl:gap-x-8 xl:gap-y-10">
-        {petsData.map((pet) => {
-          const isFavorite = favorites.includes(pet._id);
-
-          return (
-            <li
-              key={pet._id}
-              className="p-6 bg-(--light-text) rounded-2xl flex flex-col h-full"
-            >
-              <div className="flex flex-col grow">
-                <div className="w-full rounded-2xl overflow-hidden mb-6 aspect-16/10">
-                  <Image
-                    src={pet.imgURL}
-                    alt={pet.title}
-                    width={287}
-                    height={178}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-
-                <div className="flex justify-between mb-2">
-                  <h3 className="font-bold text-base leading-[125%] text-(--card-text)">
-                    {pet.title}
-                  </h3>
-
-                  <div className="flex gap-1 items-center">
-                    <svg width={16} height={16} aria-hidden="true">
-                      <use href="/img/icons.svg#icon-star" fill="#ffc531"></use>
-                    </svg>
-                    <p className="font-medium text-sm leading-[129%] text-(--card-text)">
-                      {pet.popularity}
-                    </p>
-                  </div>
-                </div>
-
-                <ul className="flex gap-3.5 justify-between mb-4">
-                  <li>
-                    <p className="font-medium text-[10px] text-(--grey-text)">
-                      Name
-                    </p>
-                    <p className="font-medium text-xs">{pet.name}</p>
-                  </li>
-
-                  <li>
-                    <p className="font-medium text-[10px] text-(--grey-text)">
-                      Birthday
-                    </p>
-                    <p className="font-medium text-xs">
-                      {new Date(pet.birthday).toLocaleDateString("uk-UA")}
-                    </p>
-                  </li>
-
-                  <li>
-                    <p className="font-medium text-[10px] text-(--grey-text)">
-                      Sex
-                    </p>
-                    <p className="font-medium text-xs capitalize">{pet.sex}</p>
-                  </li>
-
-                  <li>
-                    <p className="font-medium text-[10px] text-(--grey-text)">
-                      Species
-                    </p>
-                    <p className="font-medium text-xs capitalize">
-                      {pet.species}
-                    </p>
-                  </li>
-
-                  <li>
-                    <p className="font-medium text-[10px] text-(--grey-text)">
-                      Category
-                    </p>
-                    <p className="font-medium text-xs capitalize">
-                      {pet.category}
-                    </p>
-                  </li>
-                </ul>
-
-                <p className="font-medium text-sm mb-4">{pet.comment}</p>
-
-                <p className="font-bold text-base mb-3">
-                  {pet.price ? `$${pet.price}` : "Free"}
-                </p>
-              </div>
-
-              <div className="flex gap-2.5 justify-between">
-                <button
-                  onClick={() => handleLearnMore(pet)}
-                  className="bg-(--orange) rounded-[30px] w-full h-11.5 text-(--light-text) hover:bg-(--hover-orange)"
-                >
-                  Learn more
-                </button>
-
-                <button
-                  onClick={() => toggleFavoriteById(pet._id)}
-                  className="rounded-full bg-(--light-orange-bg) min-w-11.5 min-h-11.5 flex justify-center items-center"
-                  aria-label="Add to favorites"
-                >
-                  <svg width={18} height={16}>
-                    <use
-                      href="/img/icons.svg#icon-heart"
-                      stroke="#f6b83d"
-                      fill={isFavorite ? "#f6b83d" : "transparent"}
-                    ></use>
-                  </svg>
-                </button>
-              </div>
-            </li>
-          );
-        })}
+        {petsData.map((pet) => (
+          <NoticeCard
+            key={pet._id}
+            notice={pet}
+            variant="catalog"
+            isFavorite={isFavorite(pet._id)}
+            onFavorite={toggleFavorite}
+            onLearnMore={handleLearnMore}
+          />
+        ))}
       </ul>
 
       <Pagination
         currentPage={page}
         totalPages={totalPages}
-        onPageChange={onPageChange}
+        onPageChange={setPage}
       />
 
       <ModalAttention
@@ -255,16 +109,12 @@ export default function PetsList({ filters }: Props) {
         onClose={() => setAttentionOpen(false)}
       />
 
-      {noticeError && (
-        <p className="text-red-600 text-center mt-4">{noticeError}</p>
-      )}
-
       {noticeOpen && selectedNotice && (
         <ModalNotice
           notice={selectedNotice}
           onClose={() => setNoticeOpen(false)}
-          onFavoriteToggle={(notice) => toggleFavoriteById(notice._id)}
-          isFavorite={favorites.includes(selectedNotice._id)}
+          onFavoriteToggle={() => toggleFavorite(selectedNotice._id)}
+          isFavorite={isFavorite(selectedNotice._id)}
         />
       )}
     </>

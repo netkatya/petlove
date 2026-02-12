@@ -1,52 +1,45 @@
 "use client";
 
 import { useState } from "react";
-import NoticeCard from "./NoticeCard";
-import { NoticeDetails } from "@/types/pets";
+import NoticeCard from "../Notices/NoticeCard";
+import { useAuthStore } from "@/lib/store/authStore";
+import { useFavoritesStore } from "@/lib/store/favoritesStore";
 
-type Props = {
-  favorites: NoticeDetails[];
-  viewed: NoticeDetails[];
-  onChanged: () => void;
-};
-
-export default function MyNotices({ favorites, viewed, onChanged }: Props) {
+export default function MyNotices() {
   const [activeTab, setActiveTab] = useState<"favorites" | "viewed">(
     "favorites",
   );
 
-  const list = activeTab === "favorites" ? favorites : viewed;
+  const userFull = useAuthStore((s) => s.userFull);
+  const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
+
+  if (!userFull) return null;
+
+  const list =
+    activeTab === "favorites"
+      ? userFull.noticesFavorites
+      : userFull.noticesViewed;
 
   return (
-    <section className="rounded-[30px] md:rounded-[60px] bg-(--light-text) p-6 md:p-8">
-      <h2 className="font-bold text-xl mb-4">My notices</h2>
-
-      <div className="flex gap-4 mb-6">
-        <button
-          onClick={() => setActiveTab("favorites")}
-          className={activeTab === "favorites" ? "font-bold underline" : ""}
-        >
+    <section>
+      <div className="flex gap-2.5 mb-5">
+        <button onClick={() => setActiveTab("favorites")}>
           My favorites pets
         </button>
-
-        <button
-          onClick={() => setActiveTab("viewed")}
-          className={activeTab === "viewed" ? "font-bold underline" : ""}
-        >
-          Viewed
-        </button>
+        <button onClick={() => setActiveTab("viewed")}>Viewed</button>
       </div>
 
       {list.length === 0 ? (
-        <p>No notices here</p>
+        <p className="text-center mb-20">No pets yet</p>
       ) : (
-        <ul className="grid gap-4">
+        <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 xl:gap-x-8 xl:gap-y-10">
           {list.map((notice) => (
             <NoticeCard
               key={notice._id}
               notice={notice}
-              canDelete={activeTab === "favorites"}
-              onChanged={onChanged}
+              variant="profile"
+              onDelete={toggleFavorite}
+              onLearnMore={(id) => console.log(id)}
             />
           ))}
         </ul>

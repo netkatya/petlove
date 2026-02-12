@@ -7,15 +7,17 @@ import { useState } from "react";
 import Image from "next/image";
 import { uploadAvatar } from "@/lib/cloudinary/cloudinary";
 import { editUser } from "@/lib/api/clientApi";
+import { useAuthStore } from "@/lib/store/authStore";
 
 type Props = {
   user: CurrentUserResponse;
-  onUpdated: () => void;
 };
 
-export default function UserBlock({ user, onUpdated }: Props) {
+export default function UserBlock({ user }: Props) {
   const [open, setOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+
+  const updateUser = useAuthStore((s) => s.updateUserLocal);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -28,7 +30,8 @@ export default function UserBlock({ user, onUpdated }: Props) {
 
       await editUser({ avatar: url });
 
-      onUpdated();
+      // 🔥 МГНОВЕННО обновляем header и весь сайт
+      updateUser({ avatar: url });
     } catch (err) {
       console.error(err);
       alert("Failed to upload avatar");
@@ -38,7 +41,7 @@ export default function UserBlock({ user, onUpdated }: Props) {
   };
 
   return (
-    <div className="">
+    <div>
       <div className="flex justify-between">
         <div className="flex items-center justify-center gap-1 rounded-[30px] bg-(--orange) p-2.5 max-w-20 h-9.5">
           <span className="font-medium text-[14px] leading-[129%] tracking-[-0.02em] text-(--light-text)">
@@ -48,27 +51,29 @@ export default function UserBlock({ user, onUpdated }: Props) {
             <use href="/img/icons.svg#icon-user" fill="#fff"></use>
           </svg>
         </div>
+
         <EditUserBtn onClick={() => setOpen(true)} />
       </div>
+
       <div className="flex flex-col justify-center items-center gap-2 mb-7">
         {user.avatar ? (
           <Image
             src={user.avatar}
             width={94}
             height={94}
-            alt="User's photo or default icon"
-            className="rounded-full"
+            alt="User avatar"
+            className="rounded-full object-cover"
           />
         ) : (
           <Image
             src="/img/user-image.png"
             width={94}
             height={94}
-            alt="User's photo or default icon"
+            alt="Default avatar"
           />
         )}
 
-        <label className="cursor-pointer text-sm text-(--orange)">
+        <label className="cursor-pointer font-medium text-[12px] leading-[133%] tracking-[-0.02em] underline hover:text-(--orange) transition-all duration-300">
           {uploading ? "Uploading..." : "Upload photo"}
           <input
             type="file"
@@ -82,26 +87,28 @@ export default function UserBlock({ user, onUpdated }: Props) {
       <h3 className="font-bold text-[16px] leading-[125%] mb-5">
         My information
       </h3>
-      <ul className="flex flex-col gap-2.5">
+
+      <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-2.5">
         <li className="rounded-[30px] p-2.5 border border-(--orange) font-medium text-[14px] leading-[129%] tracking-[-0.03em]">
           {user.name}
         </li>
+
         <li className="rounded-[30px] p-2.5 border border-(--orange) font-medium text-[14px] leading-[129%] tracking-[-0.03em]">
           {user.email}
         </li>
+
         <li
           className={`rounded-[30px] p-2.5 border font-medium text-[14px] leading-[129%] tracking-[-0.03em] ${
             user.phone ? "border-(--orange)" : "border-(--light-grey)"
           }`}
         >
-          {user.phone ? user.phone : "+380"}
+          {user.phone || "+380"}
         </li>
       </ul>
 
       {open && (
         <ModalEditUser
           onClose={() => setOpen(false)}
-          onUpdated={onUpdated}
           initialAvatar={user.avatar ?? undefined}
           initialValues={{
             name: user.name ?? undefined,

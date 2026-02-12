@@ -18,6 +18,7 @@ import {
 import { AuthResponse, SignInRequest, SignUpRequest } from "@/types/auth";
 import {
   ApiErrorResponse,
+  CurrentUserFullResponse,
   CurrentUserResponse,
   EditUserRequest,
   EditUserResponse,
@@ -86,12 +87,15 @@ export async function getCurrentUser(token: string) {
   return res.data;
 }
 
-export async function getCurrentUserFull(token: string) {
-  const res = await nextServer.get("/users/current/full", {
-    headers: {
-      Authorization: `Bearer ${token}`,
+export async function getCurrentUserFull(
+  token: string,
+): Promise<CurrentUserFullResponse> {
+  const res = await nextServer.get<CurrentUserFullResponse>(
+    "/users/current/full",
+    {
+      headers: { Authorization: `Bearer ${token}` },
     },
-  });
+  );
 
   return res.data;
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { CurrentUserFullResponse } from "@/types/user";
-
 import LogOutBtn from "../LogOutButton";
 import UserBlock from "./UserBlock";
 import PetsBlock from "./PetsBlock";
@@ -9,20 +8,17 @@ import PetsBlock from "./PetsBlock";
 type Props = {
   isHome: boolean;
   user: CurrentUserFullResponse;
-  onUpdated: () => void;
 };
 
-export default function UserCard({ isHome, user, onUpdated }: Props) {
+export default function UserCard({ isHome, user }: Props) {
   return (
     <section className="rounded-[30px] md:rounded-[60px] bg-(--light-text) px-5 py-4.5">
-      <div className="flex justify-between items-start gap-3"></div>
-
       <div className="mt-6">
-        <UserBlock user={user} onUpdated={onUpdated} />
+        <UserBlock user={user} />
       </div>
 
       <div className="mt-6">
-        <PetsBlock pets={user.pets} onChanged={onUpdated} />
+        <PetsBlock pets={user.pets} />
       </div>
 
       <LogOutBtn isHome={isHome} />

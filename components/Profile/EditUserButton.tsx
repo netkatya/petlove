@@ -14,7 +14,7 @@ export default function EditUserBtn({ onClick }: Props) {
         <use
           href="/img/icons.svg#icon-edit"
           stroke="#f6b83d"
-          fill="#f6b83d"
+          fill="transparent"
         ></use>
       </svg>
     </button>

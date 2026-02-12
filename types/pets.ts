@@ -124,3 +124,17 @@ export type NoticeDetails = {
 };
 
 export type GetNoticeResponse = NoticeDetails;
+
+export type BaseNotice = {
+  _id: string;
+  title: string;
+  name: string;
+  birthday: string;
+  sex: string;
+  species: string;
+  category: string;
+  comment: string;
+  price?: number | null;
+  popularity: number;
+  imgURL: string;
+};
