@@ -58,7 +58,7 @@ export const useFavoritesStore = create<State>((set, get) => ({
         set({ favorites: [...favorites, id] });
       }
 
-      // 🔥 ВОТ ГЛАВНОЕ — синхронизируем профиль
+      
       await useAuthStore.getState().refreshUser();
     } catch (e) {
       console.error("Favorite sync error", e);
