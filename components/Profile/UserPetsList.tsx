@@ -8,11 +8,11 @@ type Props = {
   onChanged?: () => void;
 };
 
-export default function UserPetsList({ pets, onChanged }: Props) {
+export default function UserPetsList({ pets }: Props) {
   return (
-    <ul>
+    <ul className="flex-col gap-3.5 my-5">
       {pets.map((p) => (
-        <PetsItem key={p._id} pet={p} onChanged={onChanged} />
+        <PetsItem key={p._id} pet={p} />
       ))}
     </ul>
   );

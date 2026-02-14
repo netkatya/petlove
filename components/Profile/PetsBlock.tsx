@@ -14,10 +14,12 @@ export default function PetsBlock({ pets, onChanged }: Props) {
   return (
     <div>
       <div className="flex justify-between">
-        <h3 className="font-bold text-[16px] leading-[125%] mb-5">My pets</h3>
+        <h3 className="font-bold text-[16px] md:text-[18px] leading-[125%] md:leading-[133%] mb-5">
+          My pets
+        </h3>
         <Link
           href="/add-pet"
-          className="bg-(--orange) rounded-[30px] h-9.5 px-3.5 py-2.5 text-(--light-text) font-medium text-[14px] leading-[129%] tracking-[-0.03em]"
+          className="bg-(--orange) rounded-[30px] h-9.5 px-3.5 md:px-5 py-2.5 text-(--light-text) font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em]"
         >
           Add pet +
         </Link>

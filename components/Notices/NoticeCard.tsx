@@ -8,7 +8,7 @@ type Notice = Pet | NoticeDetails;
 
 type Props = {
   notice: Notice;
-  variant?: "catalog" | "profile";
+  variant?: "catalog" | "profile" | "viewed";
 
   isFavorite?: boolean;
   onFavorite?: (id: string) => void;

@@ -9,16 +9,19 @@ export default function ProfilePage() {
   const { token, userFull, refreshUser, loading } = useAuthStore();
 
   useEffect(() => {
-    if (token && !userFull) refreshUser();
-  }, [token]);
+    if (!token) return;
+    refreshUser();
+  }, [token, refreshUser]);
 
   if (!token) return <p>Please login</p>;
-  if (!userFull || loading) return <p>Loading...</p>;
+  if (loading || !userFull) return <p>Loading...</p>;
 
   return (
-    <main className="container">
-      <UserCard isHome={false} user={userFull} />
-      <MyNotices />
+    <main className="pt-40.5 pb-13">
+      <div className="container flex flex-col xl:flex-row gap-10 xl:items-start xl:gap-8">
+        <UserCard isHome={false} user={userFull} />
+        <MyNotices />
+      </div>
     </main>
   );
 }

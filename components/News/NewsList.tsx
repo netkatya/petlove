@@ -60,7 +60,7 @@ export default function NewsList({ keyword, page, onPageChange }: Props) {
               alt="News photo"
               width={335}
               height={190}
-              className="rounded-[15px] w-full h-47.5 md:h-56.5 mb-5"
+              className="rounded-[15px] w-full h-47.5 md:h-56.5 mb-5 object-cover"
             ></Image>
             <h3 className="font-bold text-base leading-tight tracking-[-0.03em] mb-3">
               {item.title}

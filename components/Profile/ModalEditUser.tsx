@@ -153,7 +153,7 @@ export default function ModalEditUser({
       onClick={onClose}
     >
       <div
-        className="bg-(--light-text) rounded-[30px] px-5 md:px-18 py-10 w-[95%] md:w-full max-w-83.75 relative"
+        className="bg-(--light-text) rounded-[30px] px-5 md:p-10 w-[95%] md:w-full max-w-83.75 md:max-w-120 xl:max-w-130 relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* CLOSE BTN */}
@@ -195,7 +195,7 @@ export default function ModalEditUser({
             <div>
               <input
                 {...register("name")}
-                className="rounded-[30px] p-3 border border-(--orange) w-full font-medium text-[14px] leading-[129%] tracking-[-0.03em]"
+                className="rounded-[30px] p-3 md:p-4 border border-(--orange) w-full font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em] outline-none"
                 placeholder="Name"
               />
               {errors.name && <p className="error">{errors.name.message}</p>}
@@ -204,7 +204,7 @@ export default function ModalEditUser({
             <div>
               <input
                 {...register("email")}
-                className="rounded-[30px] p-3 border border-(--orange) w-full font-medium text-[14px] leading-[129%] tracking-[-0.03em]"
+                className="rounded-[30px] p-3 md:p-4 border border-(--orange) w-full font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em] outline-none"
                 placeholder="Email"
               />
               {errors.email && <p className="error">{errors.email.message}</p>}
@@ -213,7 +213,7 @@ export default function ModalEditUser({
             <div>
               <input
                 {...register("phone")}
-                className={`rounded-[30px] p-3 border w-full font-medium text-[14px] leading-[129%] tracking-[-0.03em] ${
+                className={`rounded-[30px] p-3 md:p-4 border w-full font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em] outline-none ${
                   phoneValue ? "border-(--orange)" : "border-(--light-grey)"
                 }`}
                 placeholder="+380"

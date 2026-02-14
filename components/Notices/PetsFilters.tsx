@@ -289,47 +289,64 @@ export default function PetsFilters({ onChange, onReset }: Props) {
       />
 
       <div className="h-px w-full bg-(--light-grey) my-3"></div>
+      <fieldset className="flex gap-2.5 flex-wrap">
+        <legend className="sr-only">Sort</legend>
 
-      <div className="flex gap-2.5 flex-wrap">
         {[
           { key: "popular", label: "Popular" },
           { key: "notPopular", label: "Unpopular" },
           { key: "cheap", label: "Cheap" },
           { key: "expensive", label: "Expensive" },
-        ].map((item) => (
-          <div
-            key={item.key}
-            className={`bg-(--light-text) p-3 md:p-3.5 border border-(--light-grey) rounded-[30px] font-medium text-sm md:text-[16px] leading-[129%] md:leading-[125%] tracking-[-0.03em] flex items-center gap-2 hover:border-(--orange) ${
-              sort === item.key
-                ? "bg-(--orange) text-(--light-text)"
-                : "bg-background text-(--grey-text)"
-            }`}
-          >
-            <label className="cursor-pointer flex items-center gap-1">
+        ].map((item) => {
+          const checked = sort === item.key;
+
+          return (
+            <label
+              key={item.key}
+              className={`
+          group cursor-pointer
+          p-3 md:p-3.5 rounded-[30px] border flex items-center gap-2
+          font-medium text-sm md:text-[16px]
+          transition
+
+          ${
+            checked
+              ? "bg-(--orange) text-(--light-text) border-(--orange)"
+              : "bg-background text-(--grey-text) border-(--light-grey) hover:border-(--orange)"
+          }
+        `}
+            >
               <input
                 type="radio"
                 name="sort"
-                className="hidden"
-                checked={sort === item.key}
+                value={item.key}
+                checked={checked}
                 onChange={() =>
                   setSort(sort === item.key ? "" : (item.key as typeof sort))
                 }
+                className="sr-only peer"
               />
-              {item.label}
-            </label>
 
-            {sort === item.key && (
-              <button
-                onClick={() => setSort("")}
-                className="ml-1 text-white cursor-pointer"
-                aria-label="Clear sort"
-              >
-                ✕
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
+              <span>{item.label}</span>
+
+              {checked && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault(); // не переключить radio
+                    e.stopPropagation(); // не кликнуть label
+                    setSort("");
+                  }}
+                  className="ml-1 cursor-pointer"
+                  aria-label="Clear sort"
+                >
+                  ✕
+                </button>
+              )}
+            </label>
+          );
+        })}
+      </fieldset>
     </div>
   );
 }

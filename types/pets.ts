@@ -138,3 +138,8 @@ export type BaseNotice = {
   popularity: number;
   imgURL: string;
 };
+
+export type SelectOption = {
+  value: Species;
+  label: string;
+};

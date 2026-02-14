@@ -12,12 +12,12 @@ type Props = {
 
 export default function UserCard({ isHome, user }: Props) {
   return (
-    <section className="rounded-[30px] md:rounded-[60px] bg-(--light-text) px-5 py-4.5">
-      <div className="mt-6">
+    <section className="w-full xl:max-w-130 rounded-[30px] md:rounded-[60px] bg-(--light-text) px-5 py-4.5 md:p-10">
+      <div className="mb-10">
         <UserBlock user={user} />
       </div>
 
-      <div className="mt-6">
+      <div className="">
         <PetsBlock pets={user.pets} />
       </div>
 

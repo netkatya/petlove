@@ -9,7 +9,6 @@ type Props = {
 };
 
 export default function UserBar({ isHome }: Props) {
-  // 👇 подписываемся отдельно
   const name = useAuthStore((s) => s.user?.name);
   const avatar = useAuthStore((s) => s.user?.avatar);
 

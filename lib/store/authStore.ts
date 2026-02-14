@@ -71,11 +71,17 @@ export const useAuthStore = create<AuthState>()(
             getCurrentUserFull(token),
           ]);
 
-          set({
-            user,
+          set((state) => ({
             userFull: full,
+            user: {
+              ...state.user,
+              ...user,
+              avatar: full.avatar ?? user.avatar ?? state.user?.avatar,
+              name: full.name ?? user.name ?? state.user?.name,
+              email: full.email ?? user.email ?? state.user?.email,
+            },
             isAuth: true,
-          });
+          }));
         } finally {
           set({ loading: false });
         }

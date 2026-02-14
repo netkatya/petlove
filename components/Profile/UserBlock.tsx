@@ -30,7 +30,6 @@ export default function UserBlock({ user }: Props) {
 
       await editUser({ avatar: url });
 
-      // 🔥 МГНОВЕННО обновляем header и весь сайт
       updateUser({ avatar: url });
     } catch (err) {
       console.error(err);
@@ -73,7 +72,7 @@ export default function UserBlock({ user }: Props) {
           />
         )}
 
-        <label className="cursor-pointer font-medium text-[12px] leading-[133%] tracking-[-0.02em] underline hover:text-(--orange) transition-all duration-300">
+        <label className="cursor-pointer font-medium text-[12px] md:text-[14px] leading-[133%] tracking-[-0.02em] underline hover:text-(--orange) transition-all duration-300">
           {uploading ? "Uploading..." : "Upload photo"}
           <input
             type="file"
@@ -84,21 +83,21 @@ export default function UserBlock({ user }: Props) {
         </label>
       </div>
 
-      <h3 className="font-bold text-[16px] leading-[125%] mb-5">
+      <h3 className="font-bold text-[16px] md:text-[18px] leading-[125%] mb-5">
         My information
       </h3>
 
       <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-2.5">
-        <li className="rounded-[30px] p-2.5 border border-(--orange) font-medium text-[14px] leading-[129%] tracking-[-0.03em]">
+        <li className="rounded-[30px] p-2.5 md:p-4 border border-(--orange) font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em]">
           {user.name}
         </li>
 
-        <li className="rounded-[30px] p-2.5 border border-(--orange) font-medium text-[14px] leading-[129%] tracking-[-0.03em]">
+        <li className="rounded-[30px] p-2.5 md:p-4 border border-(--orange) font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em]">
           {user.email}
         </li>
 
         <li
-          className={`rounded-[30px] p-2.5 border font-medium text-[14px] leading-[129%] tracking-[-0.03em] ${
+          className={`rounded-[30px] p-2.5 md:p-4 border font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em] ${
             user.phone ? "border-(--orange)" : "border-(--light-grey)"
           }`}
         >

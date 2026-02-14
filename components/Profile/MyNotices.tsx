@@ -23,21 +23,50 @@ export default function MyNotices() {
   return (
     <section>
       <div className="flex gap-2.5 mb-5">
-        <button onClick={() => setActiveTab("favorites")}>
-          My favorites pets
+        <button
+          onClick={() => setActiveTab("favorites")}
+          className={`flex justify-center items-center rounded-[30px] py-3 w-30.75 md:w-35.5 h-10.5
+      font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em] transition
+      ${
+        activeTab === "favorites"
+          ? "bg-(--orange) text-(--light-text)"
+          : "bg-(--light-text) text-(--card-text)"
+      }`}
+        >
+          My favorite pets
         </button>
-        <button onClick={() => setActiveTab("viewed")}>Viewed</button>
+
+        <button
+          onClick={() => setActiveTab("viewed")}
+          className={`flex justify-center items-center rounded-[30px] py-3 w-30.75 md:w-35.5 h-10.5
+      font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em] transition
+      ${
+        activeTab === "viewed"
+          ? "bg-(--orange) text-(--light-text)"
+          : "bg-(--light-text) text-(--card-text)"
+      }`}
+        >
+          Viewed
+        </button>
       </div>
 
       {list.length === 0 ? (
-        <p className="text-center mb-20">No pets yet</p>
+        <p className="font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.02em] text-center py-15">
+          Oops,{" "}
+          <span className="text-(--orange) font-bold">
+            looks like there aren&apos;t any furries
+          </span>{" "}
+          on our adorable page yet. Do not worry! View your pets on the
+          &quot;find your favorite pet&quot; page and add them to your
+          favorites.
+        </p>
       ) : (
-        <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 xl:gap-x-8 xl:gap-y-10">
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-5 xl:gap-x-8 xl:gap-y-10">
           {list.map((notice) => (
             <NoticeCard
               key={notice._id}
               notice={notice}
-              variant="profile"
+              variant={activeTab === "favorites" ? "profile" : "viewed"}
               onDelete={toggleFavorite}
               onLearnMore={(id) => console.log(id)}
             />
