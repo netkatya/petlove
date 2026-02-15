@@ -11,6 +11,7 @@ import Image from "next/image";
 import { uploadAvatar } from "@/lib/cloudinary/cloudinary";
 import { CloudUpload } from "lucide-react";
 import { useAuthStore } from "@/lib/store/authStore";
+import Portal from "../Portal";
 
 /* ---------------- VALIDATION ---------------- */
 
@@ -148,99 +149,105 @@ export default function ModalEditUser({
   /* ---------------- UI ---------------- */
 
   return (
-    <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-      onClick={onClose}
-    >
+    <Portal>
       <div
-        className="bg-(--light-text) rounded-[30px] px-5 md:p-10 w-[95%] md:w-full max-w-83.75 md:max-w-120 xl:max-w-130 relative"
-        onClick={(e) => e.stopPropagation()}
+        className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+        onClick={onClose}
       >
-        {/* CLOSE BTN */}
-        <button onClick={onClose} className="absolute right-5 top-5">
-          <svg width={14} height={14}>
-            <use
-              href="/img/icons.svg#icon-close"
-              stroke="#262626"
-              className="hover:stroke-(--orange) transition-all duration-300"
-            />
-          </svg>
-        </button>
-
-        <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-4">
-          {/* AVATAR PREVIEW */}
-          <div className="flex flex-col items-center gap-3 mb-2">
-            <Image
-              src={preview || "/img/user-image.png"}
-              width={94}
-              height={94}
-              className="rounded-full object-cover"
-              alt="avatar"
-            />
-
-            <label className="bg-(--light-orange-bg) text-(--orange) font-medium text-[12px] rounded-[30px] px-4 py-2 cursor-pointer flex gap-2 items-center hover:bg-(--light-orange-hover) transition-all duration-300">
-              {uploading ? "Uploading..." : "Upload photo"}
-              <CloudUpload size={18} className="text-(--orange)" />
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleUpload}
+        <div
+          className="bg-(--light-text) rounded-[30px] p-5 md:p-10 w-[95%] md:w-full max-w-83.75 md:max-w-120 xl:max-w-130 relative"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* CLOSE BTN */}
+          <button onClick={onClose} className="absolute right-5 top-5">
+            <svg width={14} height={14}>
+              <use
+                href="/img/icons.svg#icon-close"
+                stroke="#262626"
+                className="hover:stroke-(--orange) transition-all duration-300"
               />
-            </label>
-          </div>
-          <ul className="flex flex-col gap-2.5 w-full">
-            {" "}
-            {/* NAME */}
-            <div>
-              <input
-                {...register("name")}
-                className="rounded-[30px] p-3 md:p-4 border border-(--orange) w-full font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em] outline-none"
-                placeholder="Name"
+            </svg>
+          </button>
+
+          <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-4">
+            {/* AVATAR PREVIEW */}
+            <div className="flex flex-col items-center gap-3 mb-2">
+              <Image
+                src={preview || "/img/user-image.png"}
+                width={94}
+                height={94}
+                className="rounded-full object-cover"
+                alt="avatar"
               />
-              {errors.name && <p className="error">{errors.name.message}</p>}
+
+              <label className="bg-(--light-orange-bg) text-(--orange) font-medium text-[12px] md:text-[14px] rounded-[30px] px-4 py-2 md:py-3 cursor-pointer flex gap-2 items-center hover:bg-(--light-orange-hover) transition-all duration-300">
+                {uploading ? "Uploading..." : "Upload photo"}
+                <CloudUpload size={18} className="text-(--orange)" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleUpload}
+                />
+              </label>
             </div>
-            {/* EMAIL */}
-            <div>
-              <input
-                {...register("email")}
-                className="rounded-[30px] p-3 md:p-4 border border-(--orange) w-full font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em] outline-none"
-                placeholder="Email"
-              />
-              {errors.email && <p className="error">{errors.email.message}</p>}
-            </div>
-            {/* PHONE */}
-            <div>
-              <input
-                {...register("phone")}
-                className={`rounded-[30px] p-3 md:p-4 border w-full font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em] outline-none ${
-                  phoneValue ? "border-(--orange)" : "border-(--light-grey)"
-                }`}
-                placeholder="+380"
-              />
-              {errors.phone && <p className="error">{errors.phone.message}</p>}
-            </div>
-          </ul>
+            <ul className="flex flex-col gap-2.5 w-full">
+              {" "}
+              {/* NAME */}
+              <div>
+                <input
+                  {...register("name")}
+                  className="rounded-[30px] p-3 md:p-4 border border-(--orange) w-full font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em] outline-none"
+                  placeholder="Name"
+                />
+                {errors.name && <p className="error">{errors.name.message}</p>}
+              </div>
+              {/* EMAIL */}
+              <div>
+                <input
+                  {...register("email")}
+                  className="rounded-[30px] p-3 md:p-4 border border-(--orange) w-full font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em] outline-none"
+                  placeholder="Email"
+                />
+                {errors.email && (
+                  <p className="error">{errors.email.message}</p>
+                )}
+              </div>
+              {/* PHONE */}
+              <div>
+                <input
+                  {...register("phone")}
+                  className={`rounded-[30px] p-3 md:p-4 border w-full font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.03em] outline-none ${
+                    phoneValue ? "border-(--orange)" : "border-(--light-grey)"
+                  }`}
+                  placeholder="+380"
+                />
+                {errors.phone && (
+                  <p className="error">{errors.phone.message}</p>
+                )}
+              </div>
+            </ul>
 
-          {/* BUTTONS */}
-          <div className="grid grid-cols-2 gap-2 mt-2">
-            <button
-              disabled={isSubmitting}
-              className="border bg-(--orange) text-(--light-text) rounded-[30px] font-bold text-[14px] leading-[129%] tracking-[-0.03em] px-5 py-3 hover:bg-(--hover-orange) transition-all duration-300"
-            >
-              Save
-            </button>
+            {/* BUTTONS */}
+            <div className="grid grid-cols-2 gap-2 mt-2">
+              <button
+                disabled={isSubmitting}
+                className="border bg-(--orange) text-(--light-text) rounded-[30px] font-bold text-[14px] leading-[129%] tracking-[-0.03em] px-5 py-3 hover:bg-(--hover-orange) transition-all duration-300"
+              >
+                Save
+              </button>
 
-            <button
-              type="button"
-              onClick={onClose}
-              className="border border-(--orange) rounded-[30px] text-(--orange) font-bold text-[14px] leading-[129%] tracking-[-0.03em] text-center px-5 py-3 hover:bg-(--orange) hover:text-(--light-text) transition-all duration-300"
-            >
-              Go to profile
-            </button>
-          </div>
-        </form>
+              <button
+                type="button"
+                onClick={onClose}
+                className="border border-(--orange) rounded-[30px] text-(--orange) font-bold text-[14px] leading-[129%] tracking-[-0.03em] text-center px-5 py-3 hover:bg-(--orange) hover:text-(--light-text) transition-all duration-300"
+              >
+                Go to profile
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </Portal>
   );
 }

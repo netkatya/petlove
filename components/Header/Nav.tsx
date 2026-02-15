@@ -17,7 +17,7 @@ export default function Nav({ isHome }: Props) {
   ];
 
   return (
-    <nav className="flex gap-2.5">
+    <nav className="flex flex-col xl:flex-row gap-2.5">
       {links.map(({ href, label }) => {
         const isActive = pathname === href;
 
@@ -25,7 +25,7 @@ export default function Nav({ isHome }: Props) {
           <Link
             key={href}
             href={href}
-            className={`px-5 py-3.75 border rounded-[30px] font-medium text-base leading-[125%] tracking-[-0.03em] transition-all duration-300 ease-in-out
+            className={`px-5 py-3.75 border rounded-[30px] font-medium text-base leading-[125%] tracking-[-0.03em] text-center transition-all duration-300 ease-in-out
               ${
                 isActive
                   ? "bg-(--orange) text-(--light-text)"

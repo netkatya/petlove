@@ -14,7 +14,7 @@ export default function UserBar({ isHome }: Props) {
 
   return (
     <Link href="/profile" className="flex items-center gap-2">
-      <div className="rounded-full bg-(--light-orange-bg) w-11 h-11 flex items-center justify-center overflow-hidden">
+      <div className="rounded-full bg-(--light-orange-bg) w-11 xl:w-12.5 h-11 xl:h-12.5 flex items-center justify-center overflow-hidden">
         {avatar ? (
           <Image
             src={avatar}
@@ -31,7 +31,7 @@ export default function UserBar({ isHome }: Props) {
       </div>
 
       <span
-        className={`font-bold text-[20px] leading-none tracking-[-0.03em] ${
+        className={`font-bold text-[14px] md:text-[20px] leading-none tracking-[-0.03em] ${
           isHome ? "text-(--light-text)" : "text-foreground"
         }`}
       >
