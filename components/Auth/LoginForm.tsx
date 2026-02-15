@@ -85,6 +85,7 @@ export default function LoginForm() {
       <div className="relative overflow-hidden">
         <input
           type={showPassword ? "text" : "password"}
+          autoComplete="current-password"
           {...register("password")}
           placeholder="Password"
           style={{ appearance: "none" }}
