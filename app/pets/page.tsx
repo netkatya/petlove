@@ -9,7 +9,7 @@ import { PetsFilters as PetsFiltersType } from "@/types/pets";
 export default function Pets() {
   const [filters, setFilters] = useState<PetsFiltersType>({});
   return (
-    <main className="pt-44.5 pb-20 min-h-screen">
+    <main className="pt-28.5 pb-20 min-h-screen">
       <div className="container">
         <PageTitle>Find your favorite pet</PageTitle>
         <PetsFilters onChange={setFilters} onReset={() => setFilters({})} />

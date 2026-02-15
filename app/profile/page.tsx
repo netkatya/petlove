@@ -15,7 +15,12 @@ export default function ProfilePage() {
   }, [token, refreshUser]);
 
   if (!token) return <p>Please login</p>;
-  if (loading || !userFull) return <Loading />;
+  if (loading || !userFull)
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <Loading />
+      </main>
+    );
 
   return (
     <main className="pt-40.5 pb-13">

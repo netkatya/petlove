@@ -4,6 +4,9 @@ import { useState } from "react";
 import NoticeCard from "../Notices/NoticeCard";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useFavoritesStore } from "@/lib/store/favoritesStore";
+import { getNoticeById } from "@/lib/api/clientApi";
+import { NoticeDetails } from "@/types/pets";
+import ModalNotice from "../Notices/ModalNotice";
 
 export default function MyNotices() {
   const [activeTab, setActiveTab] = useState<"favorites" | "viewed">(
@@ -11,7 +14,13 @@ export default function MyNotices() {
   );
 
   const userFull = useAuthStore((s) => s.userFull);
+  const token = useAuthStore((s) => s.token);
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
+
+  const [selectedNotice, setSelectedNotice] = useState<NoticeDetails | null>(
+    null,
+  );
+  const [open, setOpen] = useState(false);
 
   if (!userFull) return null;
 
@@ -20,8 +29,19 @@ export default function MyNotices() {
       ? userFull.noticesFavorites
       : userFull.noticesViewed;
 
+  /* -------- OPEN MODAL -------- */
+
+  const handleLearnMore = async (id: string) => {
+    if (!token) return;
+
+    const full = await getNoticeById(id, token);
+    setSelectedNotice(full);
+    setOpen(true);
+  };
+
   return (
     <section>
+      {/* tabs */}
       <div className="flex gap-2.5 mb-5">
         <button
           onClick={() => setActiveTab("favorites")}
@@ -50,6 +70,7 @@ export default function MyNotices() {
         </button>
       </div>
 
+      {/* empty */}
       {list.length === 0 ? (
         <p className="font-medium text-[14px] md:text-[16px] leading-[129%] tracking-[-0.02em] text-center py-15">
           Oops,{" "}
@@ -68,10 +89,20 @@ export default function MyNotices() {
               notice={notice}
               variant={activeTab === "favorites" ? "profile" : "viewed"}
               onDelete={toggleFavorite}
-              onLearnMore={(id) => console.log(id)}
+              onLearnMore={handleLearnMore}
             />
           ))}
         </ul>
+      )}
+
+      {/* MODAL */}
+      {open && selectedNotice && (
+        <ModalNotice
+          notice={selectedNotice}
+          onClose={() => setOpen(false)}
+          onFavoriteToggle={() => toggleFavorite(selectedNotice._id)}
+          isFavorite={activeTab === "favorites"}
+        />
       )}
     </section>
   );

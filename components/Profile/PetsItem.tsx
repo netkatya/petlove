@@ -5,7 +5,6 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { UserPet } from "@/types/user";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useEffect } from "react";
 
 type Props = {
   pet: UserPet;
@@ -18,10 +17,6 @@ export default function PetsItem({ pet }: Props) {
     await removePet(pet._id);
     await refreshUser();
   };
-
-  useEffect(() => {
-    console.log("PET:", pet);
-  }, [pet]);
 
   return (
     <li className="relative flex gap-3.5 border border-(--light-grey) rounded-[20px] p-4 ">
