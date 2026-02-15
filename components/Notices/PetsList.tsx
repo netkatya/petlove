@@ -83,6 +83,15 @@ export default function PetsList({ filters }: Props) {
 
   if (loading) return <Loading />;
 
+  const handleFavorite = (id: string) => {
+    if (!isAuth || !token) {
+      setAttentionOpen(true);
+      return;
+    }
+
+    toggleFavorite(id);
+  };
+
   return (
     <>
       <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 xl:gap-x-8 xl:gap-y-10">
@@ -92,7 +101,7 @@ export default function PetsList({ filters }: Props) {
             notice={pet}
             variant="catalog"
             isFavorite={isFavorite(pet._id)}
-            onFavorite={toggleFavorite}
+            onFavorite={handleFavorite}
             onLearnMore={handleLearnMore}
           />
         ))}
