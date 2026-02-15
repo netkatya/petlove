@@ -94,6 +94,7 @@ export default function NoticeCard({
 
         {variant === "catalog" && (
           <button
+            aria-label="add to favorites"
             onClick={() => onFavorite?.(notice._id)}
             className="rounded-full bg-(--light-orange-bg) min-w-11.5 min-h-11.5 flex justify-center items-center"
           >

@@ -104,6 +104,7 @@ export default function LoginForm() {
           type="button"
           onClick={() => setShowPassword((prev) => !prev)}
           className="absolute right-4 top-5.5 md:top-6.5 -translate-y-1/2"
+          aria-label="show-hide password"
         >
           <svg width={20} height={20}>
             <use
