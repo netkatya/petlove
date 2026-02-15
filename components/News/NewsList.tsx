@@ -6,7 +6,7 @@ import { NewsItem } from "@/types/news";
 import { formatDate } from "@/utils/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Pagination from "../Pagination";
 
 type Props = {
@@ -20,6 +20,9 @@ export default function NewsList({ keyword, page, onPageChange }: Props) {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const listRef = useRef<HTMLUListElement | null>(null);
+  const firstLoad = useRef(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,6 +45,24 @@ export default function NewsList({ keyword, page, onPageChange }: Props) {
     fetchData();
   }, [keyword, page]);
 
+  useEffect(() => {
+    if (firstLoad.current) {
+      firstLoad.current = false;
+      return;
+    }
+
+    if (!listRef.current) return;
+
+    const headerOffset = 120;
+    const elementPosition = listRef.current.getBoundingClientRect().top;
+    const offsetPosition = window.scrollY + elementPosition - headerOffset;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth",
+    });
+  }, [page]);
+
   return (
     <>
       {loading && <Loading />}
@@ -52,7 +73,10 @@ export default function NewsList({ keyword, page, onPageChange }: Props) {
         </p>
       )}
 
-      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-x-6 md:gap-y-8 xl:grid-cols-3 xl:gap-x-8.75 xl:gap-y-10">
+      <ul
+        ref={listRef}
+        className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-x-6 md:gap-y-8 xl:grid-cols-3 xl:gap-x-8.75 xl:gap-y-10"
+      >
         {newsData.map((item) => (
           <li key={item._id} className="flex flex-col justify-between">
             <Image
