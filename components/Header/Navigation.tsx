@@ -52,7 +52,7 @@ export default function Navigation({ isHome }: Props) {
 
       {/* menu */}
       <div
-        className={`fixed top-0 right-0 h-full w-54.5 md:w-93.5 bg-(--orange) z-50 px-6 pt-20 pb-10 flex flex-col justify-between gap-6
+        className={`fixed top-0 right-0 h-full w-54.5 md:w-93.5 bg-(--orange) z-50 px-6 pt-70 pb-10 flex flex-col justify-between gap-6
         transform transition-transform duration-300 ease-out
         ${open ? "translate-x-0" : "translate-x-full"}
       `}
