@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Petlove",
     description: "Find, adopt and love pets near you",
-    images: ["https://petlove-vert.vercel.app/og-image.jpg"],
+    images: ["https://petlove-vert.vercel.app/og-image.png"],
   },
 
   icons: {
