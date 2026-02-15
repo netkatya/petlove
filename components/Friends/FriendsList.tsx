@@ -53,7 +53,7 @@ export default function FriendsList() {
     <>
       {loading && <Loading />}
       {!loading && error && <p className="text-(--orange)">{error}</p>}
-      <ul className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-x-5 xl:gap-y-7">
+      <ul className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-x-5 xl:gap-y-7 mt-10 xl:mt-15">
         {friendsData.map((item) => {
           const slug = item._id;
 
