@@ -32,7 +32,6 @@ export default function LogIn() {
           /img/login/login-mob@1x.webp 1x,
           /img/login/login-mob@1x.webp 2x
         "
-              src="/img/login/login-mob@1x.webp"
             />
             <img
               src="/img/login/login-mob@1x.webp"

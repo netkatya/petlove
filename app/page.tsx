@@ -37,7 +37,6 @@ export default function Home() {
           /img/main/main-mob@1x.webp 1x,
           /img/main/main-mob@2x.webp 2x
         "
-            src="/images/hero-mobile@1x.jpg"
           />
           <img
             src="/img/main/main-tab@1x.webp"

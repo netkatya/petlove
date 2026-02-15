@@ -30,7 +30,6 @@ export default function AddPet() {
           /img/add-pet/add-mob@1x.webp 1x,
           /img/add-pet/add-mob@1x.webp 2x
         "
-              src="/img/add-pet/add-mob@1x.webp"
             />
             <img
               src="/img/add-pet/add-mob@1x.webp"
