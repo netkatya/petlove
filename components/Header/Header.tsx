@@ -9,13 +9,13 @@ export default function Header() {
   const isHome = pathname === "/";
 
   return (
-    <header
-      className={`bg-transparent py-8 w-full absolute top-0 left-0 ${
-        isHome ? "px-5 md:px-10 lg:px-30 xl:px-20 2xl:px-32" : "px-0"
-      }`}
-    >
+    <header className="bg-transparent py-8 w-full absolute top-0 left-0">
       <div className="container">
-        <div className="flex justify-between items-center ">
+        <div
+          className={`flex justify-between items-center ${
+            isHome ? "px-5 md:px-10" : "px-0"
+          }`}
+        >
           <Link
             href="/"
             className={`flex items-baseline-last font-bold text-[20px] md:text-[28px] leading-none tracking-[-0.04em] text-${isHome ? "(--light-text)" : "(--foreground)"}`}
