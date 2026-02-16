@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header/Header";
 import AuthHydrator from "@/components/Providers/AuthHydrator";
+import ScrollToTopButton from "@/components/ScrollToTop";
 
 const manrope = Manrope({
   variable: "--font-geist-sans",
@@ -61,6 +62,7 @@ export default function RootLayout({
         <AuthHydrator />
         <Header />
         {children}
+        <ScrollToTopButton />
       </body>
     </html>
   );
