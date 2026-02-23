@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🐾 Petlove
 
-## Getting Started
+Petlove is a modern web application built with Next.js, TypeScript, and Tailwind CSS.
 
-First, run the development server:
+The application allows users to create an account, manage their personal profile, and add their own pets. It integrates with a REST API, uses Zustand for state management, and supports avatar uploads via Cloudinary.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+🔗 Live Demo: https://petlove-vert.vercel.app/
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+📂 GitHub Repository: https://github.com/netkatya/petlove
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+🚀 Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+User authentication (Sign Up / Log In)
 
-## Learn More
+Personal dashboard
 
-To learn more about Next.js, take a look at the following resources:
+Add pets
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Edit personal information
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Upload and update avatar via Cloudinary
 
-## Deploy on Vercel
+Filtering, sorting, and pagination
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Responsive design
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Global state management with Zustand
+
+REST API integration
+
+🛠 Tech Stack
+
+Next.js
+
+TypeScript
+
+Tailwind CSS
+
+Zustand
+
+REST API
+
+Cloudinary
